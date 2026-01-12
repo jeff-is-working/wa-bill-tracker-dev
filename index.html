@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WA Legislative Tracker 2026 | Track Washington State Bills</title>
+    <meta name="description" content="Track and monitor Washington State legislative bills for the 2026 session. Free, open-source bill tracking with automatic updates.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --glow: rgba(59, 130, 246, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Background Animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, var(--glow) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(239, 68, 68, 0.2) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-20px, -20px) scale(1.1); }
+            66% { transform: translate(20px, -10px) scale(0.9); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sync-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 9999px;
+            transition: all 0.3s;
+        }
+
+        .sync-status.syncing {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+        }
+
+        /* Controls */
+        .controls {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn:hover {
+            background: var(--secondary);
+            border-color: var(--accent);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .btn-primary {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Filters Panel */
+        .filters-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .filters-panel.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-tag {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tag:hover {
+            background: var(--secondary);
+            border-color: var(--accent);
+        }
+
+        .filter-tag.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* Bills Grid */
+        .bills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .bill-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .bill-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent);
+        }
+
+        .bill-card.tracked {
+            border-color: var(--warning);
+        }
+
+        .bill-card.tracked::before {
+            content: '⭐';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            z-index: 10;
+        }
+
+        .bill-header {
+            padding: 1.5rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .bill-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .bill-number:hover {
+            color: #60a5fa;
+        }
+
+        .bill-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.4;
+        }
+
+        .bill-body {
+            padding: 1.5rem;
+        }
+
+        .bill-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .bill-description {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .bill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tag.status-prefiled { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: var(--warning); }
+        .tag.status-introduced { background: rgba(59, 130, 246, 0.1); color: var(--accent); border-color: var(--accent); }
+        .tag.status-committee { background: rgba(168, 85, 247, 0.1); color: #a855f7; border-color: #a855f7; }
+        .tag.status-passed { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: var(--success); }
+        .tag.status-failed { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger); }
+
+        .tag.priority-high { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger); }
+        .tag.priority-medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: var(--warning); }
+        .tag.priority-low { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: var(--success); }
+
+        .bill-actions {
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            background: var(--secondary);
+            color: var(--text);
+            border-color: var(--accent);
+        }
+
+        .action-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* User Panel */
+        .user-panel {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            min-width: 200px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .user-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .bills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .user-panel {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+            }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <h1>🏛️ WA Legislative Tracker 2026</h1>
+            <div class="sync-info">
+                <div class="sync-status" id="syncStatus">
+                    <span class="sync-dot"></span>
+                    <span id="syncText">Last sync: Loading...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalBills">0</div>
+                <div class="stat-label">Total Bills</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="trackedBills">0</div>
+                <div class="stat-label">Tracked Bills</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="newToday">0</div>
+                <div class="stat-label">New Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="hearingsWeek">0</div>
+                <div class="stat-label">Hearings This Week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="daysLeft">60</div>
+                <div class="stat-label">Days Remaining</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search bills by number, title, or sponsor...">
+            </div>
+            <button class="filter-btn" id="filterToggle" onclick="toggleFilters()">
+                🎯 Filters
+            </button>
+            <button class="filter-btn" id="trackedToggle" onclick="toggleTrackedOnly()">
+                ⭐ My Tracked
+            </button>
+            <button class="btn-primary" onclick="refreshData()">
+                🔄 Refresh
+            </button>
+        </div>
+
+        <!-- Filters Panel -->
+        <div class="filters-panel" id="filtersPanel">
+            <div class="filter-group">
+                <label class="filter-label">Status</label>
+                <div class="filter-options" id="statusFilters">
+                    <span class="filter-tag" data-filter="status" data-value="prefiled">Pre-filed</span>
+                    <span class="filter-tag" data-filter="status" data-value="introduced">Introduced</span>
+                    <span class="filter-tag" data-filter="status" data-value="committee">In Committee</span>
+                    <span class="filter-tag" data-filter="status" data-value="passed">Passed</span>
+                    <span class="filter-tag" data-filter="status" data-value="failed">Failed</span>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Priority</label>
+                <div class="filter-options" id="priorityFilters">
+                    <span class="filter-tag" data-filter="priority" data-value="high">High</span>
+                    <span class="filter-tag" data-filter="priority" data-value="medium">Medium</span>
+                    <span class="filter-tag" data-filter="priority" data-value="low">Low</span>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Committee</label>
+                <div class="filter-options" id="committeeFilters">
+                    <span class="filter-tag" data-filter="committee" data-value="education">Education</span>
+                    <span class="filter-tag" data-filter="committee" data-value="transportation">Transportation</span>
+                    <span class="filter-tag" data-filter="committee" data-value="housing">Housing</span>
+                    <span class="filter-tag" data-filter="committee" data-value="environment">Environment</span>
+                    <span class="filter-tag" data-filter="committee" data-value="finance">Finance</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bills Grid -->
+        <div class="bills-grid" id="billsGrid">
+            <!-- Bills will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- User Panel -->
+    <div class="user-panel">
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">?</div>
+            <div>
+                <div class="user-name" id="userName">Guest User</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Free Account</div>
+            </div>
+        </div>
+        <div class="user-stats">
+            <div>📊 <span id="userTrackedCount">0</span> bills tracked</div>
+            <div>📝 <span id="userNotesCount">0</span> notes saved</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            <strong>WA Legislative Tracker 2026</strong><br>
+            Open source bill tracking for Washington State<br>
+            <a href="https://github.com/jeff-is-working/wa-bill-tracker" target="_blank">GitHub Repository</a> | 
+            <a href="https://app.leg.wa.gov/" target="_blank">Official WA Legislature Site</a><br>
+            <small>Data updated daily via GitHub Actions</small>
+        </p>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Application State
+        const APP_STATE = {
+            bills: [],
+            trackedBills: new Set(),
+            userNotes: {},
+            filters: {
+                search: '',
+                status: '',
+                priority: '',
+                committee: '',
+                trackedOnly: false
+            },
+            lastSync: null,
+            userData: {
+                name: 'Guest User',
+                avatar: '?'
+            }
+        };
+
+        // GitHub Configuration
+        const GITHUB_CONFIG = {
+            owner: 'jeff-is-working', // Change this to your GitHub username
+            repo: 'wa-bill-tracker', // Repository name for data
+            branch: 'main',
+            dataPath: 'data/bills.json',
+            syncPath: 'data/sync-log.json'
+        };
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadLocalData();
+            await loadBillsData();
+            setupEventListeners();
+            updateUI();
+        });
+
+        // Load bills data from GitHub or local storage
+        async function loadBillsData() {
+            try {
+                // Try to fetch from GitHub Pages data repository
+                const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.dataPath}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    APP_STATE.bills = data.bills || [];
+                    APP_STATE.lastSync = data.lastSync || new Date().toISOString();
+                    
+                    // Cache in localStorage
+                    localStorage.setItem('billsData', JSON.stringify(data));
+                    localStorage.setItem('lastDataFetch', new Date().toISOString());
+                    
+                    showToast('✅ Data loaded successfully');
+                } else {
+                    throw new Error('Failed to fetch from GitHub');
+                }
+            } catch (error) {
+                console.error('Error loading from GitHub:', error);
+                
+                // Fall back to localStorage
+                const cachedData = localStorage.getItem('billsData');
+                if (cachedData) {
+                    const data = JSON.parse(cachedData);
+                    APP_STATE.bills = data.bills || [];
+                    APP_STATE.lastSync = data.lastSync || null;
+                    showToast('📦 Using cached data');
+                } else {
+                    // Load sample data as fallback
+                    loadSampleData();
+                    showToast('📝 Using sample data');
+                }
+            }
+            
+            updateSyncStatus();
+        }
+
+        // Load sample data (fallback)
+        function loadSampleData() {
+            APP_STATE.bills = [
+                {
+                    id: 'SB5872',
+                    number: 'SB 5872',
+                    title: 'Early Childhood Education and Assistance Program Account',
+                    sponsor: 'Sen. Claire Wilson',
+                    description: 'Establishes account for private funds to support ECEAP, funding up to 10,000 additional school day slots for 10 years',
+                    status: 'prefiled',
+                    committee: 'Education',
+                    priority: 'high',
+                    topic: 'Education',
+                    introducedDate: '2026-01-08',
+                    lastUpdated: new Date().toISOString(),
+                    hearings: [
+                        { date: '2026-01-15', time: '10:00 AM', committee: 'Education' }
+                    ]
+                },
+                {
+                    id: 'HB2225',
+                    number: 'HB 2225',
+                    title: 'Regulating Artificial Intelligence Companion Chatbots',
+                    sponsor: 'Rep. Lisa Callan',
+                    description: 'Requires AI chatbot developers to implement protocols for detecting self-harm/suicidal ideation',
+                    status: 'prefiled',
+                    committee: 'Consumer Protection',
+                    priority: 'high',
+                    topic: 'Technology',
+                    introducedDate: '2026-01-09',
+                    lastUpdated: new Date().toISOString(),
+                    hearings: []
+                },
+                {
+                    id: 'HB2090',
+                    number: 'HB 2090',
+                    title: 'Advanced Nuclear Energy Integration',
+                    sponsor: 'Rep. Stephanie Barnard',
+                    description: 'Integrates advanced nuclear energy into state energy strategy',
+                    status: 'committee',
+                    committee: 'Environment & Energy',
+                    priority: 'high',
+                    topic: 'Energy',
+                    introducedDate: '2026-01-07',
+                    lastUpdated: new Date(Date.now() - 86400000).toISOString(),
+                    hearings: [
+                        { date: '2026-01-18', time: '1:30 PM', committee: 'Environment & Energy' }
+                    ]
+                },
+                {
+                    id: 'SB6026',
+                    number: 'SB 6026',
+                    title: 'Changing Commercial Zoning to Support Housing',
+                    sponsor: 'Sen. Emily Alvarado',
+                    description: 'Requires local governments to update land use policies to allow more housing',
+                    status: 'introduced',
+                    committee: 'Housing',
+                    priority: 'high',
+                    topic: 'Housing',
+                    introducedDate: '2026-01-10',
+                    lastUpdated: new Date().toISOString(),
+                    hearings: []
+                },
+                {
+                    id: 'HB1921',
+                    number: 'HB 1921',
+                    title: 'Transportation Revenue from Road Usage',
+                    sponsor: 'Rep. Fey, Ramel, Wylie',
+                    description: 'Establishing new sources of transportation revenue',
+                    status: 'introduced',
+                    committee: 'Transportation',
+                    priority: 'high',
+                    topic: 'Transportation',
+                    introducedDate: '2026-01-06',
+                    lastUpdated: new Date(Date.now() - 172800000).toISOString(),
+                    hearings: [
+                        { date: '2026-01-20', time: '3:30 PM', committee: 'Transportation' }
+                    ]
+                }
+            ];
+        }
+
+        // Render Bills
+        function updateUI() {
+            renderBills();
+            updateStats();
+            updateUserPanel();
+        }
+
+        function renderBills() {
+            const grid = document.getElementById('billsGrid');
+            const filteredBills = filterBills();
+            
+            if (filteredBills.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">No bills found</h3>
+                        <p>Try adjusting your filters or search terms</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filteredBills.map(bill => createBillCard(bill)).join('');
+        }
+
+        function createBillCard(bill) {
+            const isTracked = APP_STATE.trackedBills.has(bill.id);
+            const hasHearings = bill.hearings && bill.hearings.length > 0;
+            
+            return `
+                <div class="bill-card ${isTracked ? 'tracked' : ''}" data-bill-id="${bill.id}">
+                    <div class="bill-header">
+                        <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ')[1]}&Year=2026" 
+                           target="_blank" class="bill-number">${bill.number}</a>
+                        <div class="bill-title">${bill.title}</div>
+                    </div>
+                    
+                    <div class="bill-body">
+                        <div class="bill-meta">
+                            <span class="meta-item">👤 ${bill.sponsor}</span>
+                            <span class="meta-item">🏛️ ${bill.committee}</span>
+                            ${hasHearings ? `<span class="meta-item" style="color: var(--warning);">📅 Hearing ${bill.hearings[0].date}</span>` : ''}
+                        </div>
+                        
+                        <div class="bill-description">${bill.description}</div>
+                        
+                        <div class="bill-tags">
+                            <span class="tag status-${bill.status}">${bill.status}</span>
+                            <span class="tag priority-${bill.priority}">${bill.priority} priority</span>
+                            <span class="tag">${bill.topic}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bill-actions">
+                        <button class="action-btn ${isTracked ? 'active' : ''}" onclick="toggleTrack('${bill.id}')">
+                            ${isTracked ? '⭐ Tracked' : '☆ Track'}
+                        </button>
+                        <button class="action-btn" onclick="addNote('${bill.id}')">
+                            📝 Note
+                        </button>
+                        <button class="action-btn" onclick="shareBill('${bill.id}')">
+                            🔗 Share
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Filter Bills
+        function filterBills() {
+            let filtered = [...APP_STATE.bills];
+            
+            // Search filter
+            if (APP_STATE.filters.search) {
+                const search = APP_STATE.filters.search.toLowerCase();
+                filtered = filtered.filter(bill => 
+                    bill.number.toLowerCase().includes(search) ||
+                    bill.title.toLowerCase().includes(search) ||
+                    bill.description.toLowerCase().includes(search) ||
+                    bill.sponsor.toLowerCase().includes(search)
+                );
+            }
+            
+            // Status filter
+            if (APP_STATE.filters.status) {
+                filtered = filtered.filter(bill => bill.status === APP_STATE.filters.status);
+            }
+            
+            // Priority filter
+            if (APP_STATE.filters.priority) {
+                filtered = filtered.filter(bill => bill.priority === APP_STATE.filters.priority);
+            }
+            
+            // Committee filter
+            if (APP_STATE.filters.committee) {
+                filtered = filtered.filter(bill => 
+                    bill.committee.toLowerCase().includes(APP_STATE.filters.committee)
+                );
+            }
+            
+            // Tracked only filter
+            if (APP_STATE.filters.trackedOnly) {
+                filtered = filtered.filter(bill => APP_STATE.trackedBills.has(bill.id));
+            }
+            
+            return filtered;
+        }
+
+        // Bill Actions
+        function toggleTrack(billId) {
+            if (APP_STATE.trackedBills.has(billId)) {
+                APP_STATE.trackedBills.delete(billId);
+                showToast('✖️ Bill removed from tracking');
+            } else {
+                APP_STATE.trackedBills.add(billId);
+                showToast('⭐ Bill added to tracking');
+            }
+            
+            saveLocalData();
+            updateUI();
+        }
+
+        function addNote(billId) {
+            const note = prompt('Add a note for this bill:');
+            if (note) {
+                if (!APP_STATE.userNotes[billId]) {
+                    APP_STATE.userNotes[billId] = [];
+                }
+                APP_STATE.userNotes[billId].push({
+                    text: note,
+                    date: new Date().toISOString()
+                });
+                
+                saveLocalData();
+                showToast('📝 Note added');
+                updateUserPanel();
+            }
+        }
+
+        function shareBill(billId) {
+            const bill = APP_STATE.bills.find(b => b.id === billId);
+            const url = `https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ')[1]}&Year=2026`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: `${bill.number}: ${bill.title}`,
+                    text: bill.description,
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url);
+                showToast('🔗 Link copied to clipboard');
+            }
+        }
+
+        // UI Updates
+        function updateStats() {
+            document.getElementById('totalBills').textContent = APP_STATE.bills.length;
+            document.getElementById('trackedBills').textContent = APP_STATE.trackedBills.size;
+            
+            const today = new Date().toDateString();
+            const newToday = APP_STATE.bills.filter(bill => 
+                new Date(bill.lastUpdated).toDateString() === today
+            ).length;
+            document.getElementById('newToday').textContent = newToday;
+            
+            const weekFromNow = new Date();
+            weekFromNow.setDate(weekFromNow.getDate() + 7);
+            const hearingsThisWeek = APP_STATE.bills.reduce((count, bill) => {
+                if (!bill.hearings) return count;
+                return count + bill.hearings.filter(h => {
+                    const hearingDate = new Date(h.date);
+                    return hearingDate >= new Date() && hearingDate <= weekFromNow;
+                }).length;
+            }, 0);
+            document.getElementById('hearingsWeek').textContent = hearingsThisWeek;
+            
+            // Calculate days remaining
+            const sessionEnd = new Date('2026-03-12');
+            const daysLeft = Math.ceil((sessionEnd - new Date()) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysLeft').textContent = Math.max(0, daysLeft);
+        }
+
+        function updateUserPanel() {
+            document.getElementById('userName').textContent = APP_STATE.userData.name;
+            document.getElementById('userAvatar').textContent = APP_STATE.userData.avatar;
+            document.getElementById('userTrackedCount').textContent = APP_STATE.trackedBills.size;
+            
+            const totalNotes = Object.values(APP_STATE.userNotes).reduce((sum, notes) => sum + notes.length, 0);
+            document.getElementById('userNotesCount').textContent = totalNotes;
+        }
+
+        function updateSyncStatus() {
+            const syncText = document.getElementById('syncText');
+            if (APP_STATE.lastSync) {
+                const syncDate = new Date(APP_STATE.lastSync);
+                const hours = Math.floor((Date.now() - syncDate) / (1000 * 60 * 60));
+                
+                if (hours < 1) {
+                    syncText.textContent = 'Last sync: Just now';
+                } else if (hours < 24) {
+                    syncText.textContent = `Last sync: ${hours} hour${hours > 1 ? 's' : ''} ago`;
+                } else {
+                    const days = Math.floor(hours / 24);
+                    syncText.textContent = `Last sync: ${days} day${days > 1 ? 's' : ''} ago`;
+                }
+            } else {
+                syncText.textContent = 'Last sync: Never';
+            }
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Search input
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                APP_STATE.filters.search = e.target.value;
+                renderBills();
+            });
+            
+            // Filter tags
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    const filter = tag.dataset.filter;
+                    const value = tag.dataset.value;
+                    
+                    if (tag.classList.contains('active')) {
+                        tag.classList.remove('active');
+                        APP_STATE.filters[filter] = '';
+                    } else {
+                        // Clear other filters in same group
+                        tag.parentElement.querySelectorAll('.filter-tag').forEach(t => 
+                            t.classList.remove('active')
+                        );
+                        tag.classList.add('active');
+                        APP_STATE.filters[filter] = value;
+                    }
+                    
+                    renderBills();
+                });
+            });
+        }
+
+        // UI Controls
+        function toggleFilters() {
+            const panel = document.getElementById('filtersPanel');
+            const btn = document.getElementById('filterToggle');
+            
+            panel.classList.toggle('active');
+            btn.classList.toggle('active');
+        }
+
+        function toggleTrackedOnly() {
+            const btn = document.getElementById('trackedToggle');
+            APP_STATE.filters.trackedOnly = !APP_STATE.filters.trackedOnly;
+            btn.classList.toggle('active');
+            renderBills();
+        }
+
+        async function refreshData() {
+            const syncStatus = document.getElementById('syncStatus');
+            syncStatus.classList.add('syncing');
+            
+            await loadBillsData();
+            updateUI();
+            
+            setTimeout(() => {
+                syncStatus.classList.remove('syncing');
+            }, 1000);
+        }
+
+        // Local Storage
+        function saveLocalData() {
+            const data = {
+                trackedBills: Array.from(APP_STATE.trackedBills),
+                userNotes: APP_STATE.userNotes,
+                userData: APP_STATE.userData
+            };
+            localStorage.setItem('userWABillTracker', JSON.stringify(data));
+        }
+
+        function loadLocalData() {
+            const saved = localStorage.getItem('userWABillTracker');
+            if (saved) {
+                const data = JSON.parse(saved);
+                APP_STATE.trackedBills = new Set(data.trackedBills || []);
+                APP_STATE.userNotes = data.userNotes || {};
+                APP_STATE.userData = data.userData || APP_STATE.userData;
+            }
+            
+            // Try to get user info from localStorage or generate
+            if (!APP_STATE.userData.name || APP_STATE.userData.name === 'Guest User') {
+                const savedName = localStorage.getItem('userName');
+                if (savedName) {
+                    APP_STATE.userData.name = savedName;
+                    APP_STATE.userData.avatar = savedName.charAt(0).toUpperCase();
+                } else {
+                    const name = prompt('Enter your name (optional):') || 'Guest User';
+                    if (name !== 'Guest User') {
+                        localStorage.setItem('userName', name);
+                        APP_STATE.userData.name = name;
+                        APP_STATE.userData.avatar = name.charAt(0).toUpperCase();
+                    }
+                }
+            }
+        }
+
+        // Toast Notifications
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

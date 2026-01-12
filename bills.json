@@ -1,0 +1,137 @@
+{
+  "lastSync": "2026-01-12T18:00:00Z",
+  "sessionYear": 2026,
+  "sessionStart": "2026-01-12",
+  "sessionEnd": "2026-03-12",
+  "totalBills": 7,
+  "bills": [
+    {
+      "id": "SB5872",
+      "number": "SB 5872",
+      "title": "Early Childhood Education and Assistance Program Account",
+      "sponsor": "Sen. Claire Wilson",
+      "description": "Establishes account for private funds to support ECEAP, funding up to 10,000 additional school day slots for 10 years",
+      "status": "prefiled",
+      "committee": "Education",
+      "priority": "high",
+      "topic": "Education",
+      "introducedDate": "2026-01-08",
+      "lastUpdated": "2026-01-12T18:00:00Z",
+      "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5872&Year=2026",
+      "hearings": [
+        {
+          "date": "2026-01-15",
+          "time": "10:00 AM",
+          "committee": "Education"
+        }
+      ]
+    },
+    {
+      "id": "HB2225",
+      "number": "HB 2225",
+      "title": "Regulating Artificial Intelligence Companion Chatbots",
+      "sponsor": "Rep. Lisa Callan",
+      "description": "Requires AI chatbot developers to implement protocols for detecting self-harm/suicidal ideation, with protections for minors",
+      "status": "prefiled",
+      "committee": "Consumer Protection & Business",
+      "priority": "high",
+      "topic": "Technology",
+      "introducedDate": "2026-01-09",
+      "lastUpdated": "2026-01-12T18:00:00Z",
+      "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2225&Year=2026",
+      "hearings": []
+    },
+    {
+      "id": "HB2090",
+      "number": "HB 2090",
+      "title": "Advanced Nuclear Energy Integration",
+      "sponsor": "Rep. Stephanie Barnard",
+      "description": "Integrates advanced nuclear energy into state energy strategy, requires Commerce to develop nuclear framework by Dec 2026",
+      "status": "committee",
+      "committee": "Environment & Energy",
+      "priority": "high",
+      "topic": "Energy",
+      "introducedDate": "2026-01-07",
+      "lastUpdated": "2026-01-11T14:30:00Z",
+      "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2090&Year=2026",
+      "hearings": [
+        {
+          "date": "2026-01-18",
+          "time": "1:30 PM",
+          "committee": "Environment & Energy"
+        }
+      ]
+    },
+    {
+      "id": "SB6026",
+      "number": "SB 6026",
+      "title": "Changing Commercial Zoning to Support Housing",
+      "sponsor": "Sen. Emily Alvarado",
+      "description": "Requires local governments to update land use policies under GMA to allow more housing in commercial zones",
+      "status": "introduced",
+      "committee": "Housing",
+      "priority": "high",
+      "topic": "Housing",
+      "introducedDate": "2026-01-10",
+      "lastUpdated": "2026-01-12T18:00:00Z",
+      "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=6026&Year=2026",
+      "hearings": []
+    },
+    {
+      "id": "HB1921",
+      "number": "HB 1921",
+      "title": "Transportation Revenue from Road Usage",
+      "sponsor": "Rep. Fey, Ramel, Wylie, Ormsby",
+      "description": "Establishing new sources of transportation revenue based on motor vehicle use of public roadways",
+      "status": "introduced",
+      "committee": "Transportation",
+      "priority": "high",
+      "topic": "Transportation",
+      "introducedDate": "2026-01-06",
+      "lastUpdated": "2026-01-10T09:15:00Z",
+      "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1921&Year=2026",
+      "hearings": [
+        {
+          "date": "2026-01-20",
+          "time": "3:30 PM",
+          "committee": "Transportation"
+        }
+      ]
+    },
+    {
+      "id": "HB2147",
+      "number": "HB 2147",
+      "title": "School Materials and Supplies Funding Increase",
+      "sponsor": "Rep. Mia Gregerson",
+      "description": "Increases state funding for school materials/supplies by $100 per FTE student, adjusted annually for inflation",
+      "status": "prefiled",
+      "committee": "Education",
+      "priority": "high",
+      "topic": "Education",
+      "introducedDate": "2026-01-11",
+      "lastUpdated": "2026-01-12T18:00:00Z",
+      "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2147&Year=2026",
+      "hearings": []
+    },
+    {
+      "id": "SB5853",
+      "number": "SB 5853",
+      "title": "Protecting Elected Officials from Political Violence",
+      "sponsor": "Sen. Jeff Wilson",
+      "description": "Enhanced protections for elected officials from political violence and threats",
+      "status": "prefiled",
+      "committee": "Law & Justice",
+      "priority": "medium",
+      "topic": "Public Safety",
+      "introducedDate": "2026-01-10",
+      "lastUpdated": "2026-01-12T18:00:00Z",
+      "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5853&Year=2026",
+      "hearings": []
+    }
+  ],
+  "metadata": {
+    "source": "Washington State Legislature",
+    "updateFrequency": "daily",
+    "dataVersion": "1.0.0"
+  }
+}
