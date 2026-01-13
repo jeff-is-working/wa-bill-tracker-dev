@@ -660,6 +660,7 @@ function calculateBillStats() {
 }
 
 // UI Updates
+
 function updateStats() {
     document.getElementById('totalBills').textContent = APP_STATE.bills.length;
     document.getElementById('trackedBills').textContent = APP_STATE.trackedBills.size;
@@ -681,7 +682,16 @@ function updateStats() {
     }, 0);
     document.getElementById('hearingsWeek').textContent = hearingsThisWeek;
     
-    const daysLeft = Math.ceil((APP_CONFIG.sessionEnd - new Date()) / (1000 * 60 * 60 * 24));
+    // FIXED: Calculate remaining session days INCLUDING today
+    const sessionEnd = new Date(APP_CONFIG.sessionEnd);
+    const today_date = new Date();
+    
+    // Set to midnight for accurate day counting
+    sessionEnd.setHours(0, 0, 0, 0);
+    today_date.setHours(0, 0, 0, 0);
+    
+    // Days from today through end of session (inclusive of today)
+    const daysLeft = Math.ceil((sessionEnd - today_date) / (1000 * 60 * 60 * 24)) + 1;
     document.getElementById('daysLeft').textContent = Math.max(0, daysLeft);
 }
 
