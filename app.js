@@ -8,7 +8,7 @@ const APP_CONFIG = {
     cookieDuration: 90, // days
     autoSaveInterval: 30000, // 30 seconds
     dataRefreshInterval: 3600000, // 1 hour
-    githubDataUrl: 'https://raw.githubusercontent.com/jeff-is-working/wa-bill-tracker-data/main/data/bills.json',
+    githubDataUrl: 'https://raw.githubusercontent.com/jeff-is-working/wa-bill-tracker/main/data/bills.json',
     sessionEnd: new Date('2026-03-12')
 };
 
