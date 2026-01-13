@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Washington State Legislature Bill Fetcher
+Washington State Legislature Bill Fetcher with Hearings
 Fetches bills for the 2026 session using the official WA Legislature Web Services API
+Includes committee hearing schedules
 Compliant with https://wslwebservices.leg.wa.gov/
 """
 
@@ -23,6 +24,65 @@ SESSION = "2025-26"  # Biennial session
 def ensure_data_dir():
     """Ensure data directory exists"""
     DATA_DIR.mkdir(exist_ok=True)
+
+def fetch_committee_meetings(year: int) -> Dict[str, List[Dict]]:
+    """
+    Fetch all committee meetings/hearings for the year
+    Returns a dictionary mapping bill numbers to their hearings
+    """
+    hearings_by_bill = {}
+    
+    try:
+        # Use the CommitteeService to get committee meetings
+        url = f"{WS_BASE_URL}/CommitteeService.asmx/GetCommitteeMeetings"
+        params = {
+            'year': year
+        }
+        
+        print(f"📅 Fetching committee meetings from WA Legislature API...")
+        
+        response = requests.get(url, params=params, timeout=30)
+        
+        if response.status_code == 200:
+            root = ET.fromstring(response.content)
+            
+            # Process each committee meeting
+            for meeting in root.findall('.//CommitteeMeeting'):
+                meeting_date = meeting.findtext('Date', '')
+                committee_name = meeting.findtext('Name', '')
+                meeting_time = meeting.findtext('Time', '')
+                
+                # Get agenda items (bills being heard)
+                agenda_items = meeting.findall('.//AgendaItem')
+                
+                for item in agenda_items:
+                    bill_number = item.findtext('BillId', '')
+                    
+                    if bill_number and meeting_date:
+                        hearing = {
+                            'date': meeting_date[:10],  # Format: YYYY-MM-DD
+                            'time': meeting_time or 'TBA',
+                            'committee': committee_name or 'Unknown Committee'
+                        }
+                        
+                        # Normalize bill number
+                        bill_key = bill_number.replace(' ', '')
+                        
+                        if bill_key not in hearings_by_bill:
+                            hearings_by_bill[bill_key] = []
+                        
+                        hearings_by_bill[bill_key].append(hearing)
+            
+            print(f"✅ Found hearings for {len(hearings_by_bill)} bills")
+            
+        else:
+            print(f"⚠️  Committee meetings API returned status: {response.status_code}")
+            
+    except Exception as e:
+        print(f"⚠️  Error fetching committee meetings: {e}")
+        print(f"   Continuing without hearing data...")
+    
+    return hearings_by_bill
 
 def fetch_legislation_from_api(year: int) -> List[Dict]:
     """
@@ -105,7 +165,7 @@ def fetch_bill_details(bill_id: str, year: int) -> Optional[Dict]:
                 chamber = "House" if bill_number.startswith('H') else "Senate"
                 committee = item.findtext('CurrentCommittee', 'Unknown')
                 
-                # Create bill object
+                # Create bill object (hearings will be added later)
                 bill = {
                     "id": bill_number.replace(" ", ""),
                     "number": bill_number,
@@ -119,7 +179,7 @@ def fetch_bill_details(bill_id: str, year: int) -> Optional[Dict]:
                     "introducedDate": item.findtext('IntroducedDate', datetime.now().strftime('%Y-%m-%d')),
                     "lastUpdated": datetime.now().isoformat(),
                     "legUrl": f"https://app.leg.wa.gov/billsummary?BillNumber={bill_number.split()[1]}&Year={year}",
-                    "hearings": []
+                    "hearings": []  # Will be populated later
                 }
                 
                 return bill
@@ -128,6 +188,25 @@ def fetch_bill_details(bill_id: str, year: int) -> Optional[Dict]:
         print(f"   ⚠️  Error fetching details for {bill_id}: {e}")
     
     return None
+
+def merge_hearings_data(bills: List[Dict], hearings_by_bill: Dict[str, List[Dict]]) -> None:
+    """
+    Merge hearing data into bills
+    """
+    if not hearings_by_bill:
+        print("⚠️  No hearing data available from API")
+        return
+    
+    hearings_added = 0
+    
+    for bill in bills:
+        bill_key = bill['id']
+        
+        if bill_key in hearings_by_bill:
+            bill['hearings'] = hearings_by_bill[bill_key]
+            hearings_added += len(bill['hearings'])
+    
+    print(f"✅ Added {hearings_added} hearings to bills from API data")
 
 def determine_status_from_api(item: ET.Element) -> str:
     """Determine bill status from API data"""
@@ -213,8 +292,9 @@ def save_bills_data(bills: List[Dict]) -> Dict:
             "source": "Washington State Legislature Web Services API",
             "apiUrl": "https://wslwebservices.leg.wa.gov/",
             "updateFrequency": "daily",
-            "dataVersion": "3.0.0",
-            "billTypes": ["HB", "SB", "HJR", "SJR", "HJM", "SJM", "HCR", "SCR"]
+            "dataVersion": "3.1.0",
+            "billTypes": ["HB", "SB", "HJR", "SJR", "HJM", "SJM", "HCR", "SCR"],
+            "includesHearings": True
         }
     }
     
@@ -264,7 +344,7 @@ def load_existing_data() -> Optional[Dict]:
 
 def main():
     """Main execution function"""
-    print(f"🚀 Starting WA Legislature Bill Fetcher - {datetime.now()}")
+    print(f"🚀 Starting WA Legislature Bill Fetcher with Hearings - {datetime.now()}")
     print(f"📡 Using WA Legislature Web Services API")
     print(f"   API Base: {WS_BASE_URL}")
     print("=" * 60)
@@ -279,6 +359,9 @@ def main():
         existing_bills = {bill['id']: bill for bill in existing_data.get('bills', [])}
         print(f"📚 Loaded {len(existing_bills)} existing bills")
     
+    # Fetch committee meetings/hearings first
+    hearings_by_bill = fetch_committee_meetings(YEAR)
+    
     # Fetch bills from API
     print(f"📥 Fetching bills for {YEAR} session...")
     all_bills = fetch_legislation_from_api(YEAR)
@@ -291,6 +374,9 @@ def main():
             print("❌ No existing data available")
             create_sync_log(0, 0, "failed")
             return
+    
+    # Merge hearings data into bills
+    merge_hearings_data(all_bills, hearings_by_bill)
     
     # Track new bills
     new_bills = []
@@ -318,11 +404,17 @@ def main():
     # Create sync log
     create_sync_log(len(final_bills), len(new_bills), "success")
     
+    # Summary statistics
+    total_hearings = sum(len(bill.get('hearings', [])) for bill in final_bills)
+    bills_with_hearings = sum(1 for bill in final_bills if bill.get('hearings'))
+    
     print("=" * 60)
     print(f"✅ Successfully updated database:")
     print(f"   - Total bills: {len(final_bills)}")
     print(f"   - New bills: {len(new_bills)}")
     print(f"   - Updated bills: {len(updated_bills)}")
+    print(f"   - Bills with hearings: {bills_with_hearings}")
+    print(f"   - Total hearings: {total_hearings}")
     print(f"🏁 Update complete at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 if __name__ == "__main__":
