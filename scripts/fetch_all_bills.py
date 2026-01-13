@@ -63,7 +63,7 @@ def fetch_prefiled_bills() -> List[Dict]:
     Return a curated list of prefiled WA bills for the 2026 session.
     Update/extend this list from official WA Legislature sources as needed.
     """
-  
+    curated = []
 
     bills: List[Dict] = []
     for bill_data in curated:
@@ -206,8 +206,8 @@ def save_bills_data(bills: List[Dict]) -> Dict:
     snapshot_file = SNAPSHOT_DIR / f"{ts}_bills.json"
     write_json_atomic(snapshot_file, data)
 
-    print(f" Saved {len(bills)} bills to {data_file}")
-    print(f" Snapshot created at {snapshot_file}")
+    print(f"✅ Saved {len(bills)} bills to {data_file}")
+    print(f"🗂️ Snapshot created at {snapshot_file}")
 
     return data
 
