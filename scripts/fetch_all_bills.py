@@ -4,16 +4,14 @@
 WA Legislature - Current Bills & Status (2026)
 Standard-library-only client for Washington State Legislative Web Services.
 
-Data sources:
-- GetLegislationByYear(2026): enumerate bills active in 2026
-- GetCurrentStatus( biennium="2025-26", billNumber=<int> ): current status for each bill
+Fixes:
+- Call GetLegislationByYear via SOAP 1.1 and parse <LegislationInfo> items.
+- Call GetCurrentStatus via HTTP GET (as documented).
+- Preserve atomic writes + timestamped snapshots.
 
-Writes:
-- data/bills.json (canonical)
-- data/sync/<YYYYMMDD-HHMMSS>_bills.json (timestamped snapshot)
-
-Environment (optional):
-- WALEG_THROTTLE_SECONDS: politeness delay between HTTP calls (default: 0.10)
+Refs:
+- GetLegislationByYear SOAP 1.1 shape & response: https://wslwebservices.leg.wa.gov/LegislationService.asmx?op=GetLegislationByYear
+- GetCurrentStatus HTTP GET shape: https://wslwebservices.leg.wa.gov/LegislationService.asmx?op=GetCurrentStatus
 """
 
 import json
@@ -46,18 +44,42 @@ HTTP_TIMEOUT = 60  # seconds
 def http_get_xml(endpoint: str, params: Dict[str, Any]) -> ET.Element:
     """
     Perform an HTTP GET to an LWS endpoint with query params and parse the XML response.
-    Uses standard library only (urllib + xml.etree).
     """
     qs = urlencode(params)
     url = f"{endpoint}?{qs}"
-    req = Request(url, headers={"User-Agent": "wa-leg-status-bot/1.0"})
+    req = Request(url, headers={"User-Agent": "wa-leg-status-bot/1.1"})
     with urlopen(req, timeout=HTTP_TIMEOUT) as resp:
         content = resp.read()
     try:
         return ET.fromstring(content)
     except ET.ParseError as e:
-        # For troubleshooting, you might want to log content to a temp file
         raise RuntimeError(f"XML parse error at {endpoint} with params {params}: {e}") from e
+
+def http_post_soap(action: str, body_xml: str) -> ET.Element:
+    """
+    Perform a SOAP 1.1 POST with the required SOAPAction header and parse XML.
+    """
+    soap_envelope = f"""<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                   xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        {body_xml}
+      </soap:Body>
+    </soap:Envelope>"""
+    data = soap_envelope.encode("utf-8")
+    headers = {
+        "User-Agent": "wa-leg-status-bot/1.1",
+        "Content-Type": "text/xml; charset=utf-8",
+        "SOAPAction": f"http://WSLWebServices.leg.wa.gov/{action}",
+    }
+    req = Request(SERVICE_BASE, data=data, headers=headers, method="POST")
+    with urlopen(req, timeout=HTTP_TIMEOUT) as resp:
+        content = resp.read()
+    try:
+        return ET.fromstring(content)
+    except ET.ParseError as e:
+        raise RuntimeError(f"SOAP parse error for action {action}: {e}") from e
 
 def sleep_throttle():
     if THROTTLE_SECONDS > 0:
@@ -75,6 +97,12 @@ def xml_find_text(elem: ET.Element, tag_suffix: str, default: Optional[str] = No
             return (child.text or "").strip() if child.text else default
     return default
 
+def xml_find_first(elem: ET.Element, tag_suffix: str) -> Optional[ET.Element]:
+    for e in elem.iter():
+        if e.tag.endswith(tag_suffix):
+            return e
+    return None
+
 def xml_iter_children(elem: ET.Element, tag_suffix: str) -> List[ET.Element]:
     """
     Return all descendant elements whose tag ends with tag_suffix.
@@ -86,27 +114,32 @@ def xml_iter_children(elem: ET.Element, tag_suffix: str) -> List[ET.Element]:
     return matches
 
 # -----------------------------
-# LWS calls (no external libs)
+# LWS calls
 # -----------------------------
-def get_legislation_by_year(year: int) -> List[ET.Element]:
+def get_legislation_by_year_soap(year: int) -> List[ET.Element]:
     """
-    Call GetLegislationByYear and return a list of <Legislation> elements (namespace-agnostic).
-    Endpoint (HTTP GET returns XML):
-      https://wslwebservices.leg.wa.gov/LegislationService.asmx/GetLegislationByYear?year=YYYY
+    Call GetLegislationByYear via SOAP 1.1 and return a list of <LegislationInfo> nodes.
     """
-    root = http_get_xml(f"{SERVICE_BASE}/GetLegislationByYear", {"year": year})
-    # Expect an array root wrapping multiple <Legislation> items, but be flexible.
-    items = xml_iter_children(root, "Legislation")
+    body_xml = f"""
+      <GetLegislationByYear xmlns="http://WSLWebServices.leg.wa.gov/">
+        <year>{year}</year>
+      </GetLegislationByYear>
+    """.strip()
+    envelope = http_post_soap("GetLegislationByYear", body_xml)
+    # We expect: Envelope -> Body -> GetLegislationByYearResponse -> GetLegislationByYearResult -> LegislationInfo*
+    result = xml_find_first(envelope, "GetLegislationByYearResult")
+    if result is None:
+        # Some environments return the result directly; be flexible
+        result = envelope
+    items = xml_iter_children(result, "LegislationInfo")
     return items
 
 def get_current_status(biennium: str, bill_number: int) -> Dict[str, Optional[str]]:
     """
     Call GetCurrentStatus and return a dict with 'Status' and 'ActionDate' (best effort).
-    Endpoint (HTTP GET returns XML):
-      https://wslwebservices.leg.wa.gov/LegislationService.asmx/GetCurrentStatus?biennium=2005-06&billNumber=1234
+    HTTP GET interface documented on the operation page.
     """
     root = http_get_xml(f"{SERVICE_BASE}/GetCurrentStatus", {"biennium": biennium, "billNumber": bill_number})
-    # Shape (root): <LegislativeStatus> with children: Status, ActionDate, etc.
     status = xml_find_text(root, "Status", default="unknown")
     action_date = xml_find_text(root, "ActionDate", default=None)
     return {"Status": status, "ActionDate": action_date}
@@ -116,36 +149,29 @@ def get_current_status(biennium: str, bill_number: int) -> Dict[str, Optional[st
 # -----------------------------
 def build_bill_record(item: ET.Element) -> Optional[Dict[str, Any]]:
     """
-    Convert a <Legislation> element to our canonical record and enrich with current status.
+    Convert a <LegislationInfo> element to our canonical record and enrich with current status.
     """
-    # Prefer DisplayNumber (e.g., "HB 1001"); otherwise compose from ShortLegislationType + BillNumber.
     display_number = xml_find_text(item, "DisplayNumber")
     bill_number_text = xml_find_text(item, "BillNumber")
     bill_number_int = None
     if bill_number_text and bill_number_text.isdigit():
         bill_number_int = int(bill_number_text)
 
-    short_type = xml_find_text(item, "ShortLegislationType")
-    bill_id = xml_find_text(item, "BillId")  # Sometimes includes "HB 1001"
-    title = (
-        xml_find_text(item, "Title")
-        or xml_find_text(item, "LongTitle")
-        or xml_find_text(item, "ShortTitle")
-        or xml_find_text(item, "Description")
-        or ""
-    )
+    bill_id = xml_find_text(item, "BillId")  # sometimes "HB 1001"
+    # For this 'current bills & status' task, Title is not provided by the summary call. Leave empty.
+    title = ""
 
     if display_number:
         number = display_number
-    elif short_type and bill_number_int is not None:
-        number = f"{short_type} {bill_number_int}"
     elif bill_id:
         number = bill_id
+    elif bill_number_int is not None:
+        # As a last resort, we can't derive prefix (HB/SB) reliably here; skip if no displayNumber/billId.
+        number = f"{bill_number_int}"
     else:
-        # If we truly cannot derive a number, skip the record
         return None
 
-    # Enrich with current status (best effort)
+    # Enrich with current status
     status = "unknown"
     try:
         if bill_number_int is not None:
@@ -206,11 +232,16 @@ def save_outputs(bills: List[Dict[str, Any]]):
 # Main
 # -----------------------------
 def main():
-    print(f"🚀 Fetching WA bills for {YEAR} and current status (biennium {BIENNIUM})")
+    print(f"🚀 Fetching WA bills for {YEAR} + current status (biennium {BIENNIUM})")
     try:
-        items = get_legislation_by_year(YEAR)
+        items = get_legislation_by_year_soap(YEAR)
     except Exception as e:
         raise SystemExit(f"Failed to fetch legislation list for {YEAR}: {e}")
+
+    if not items:
+        print("⚠️ No legislation returned. The service may be temporarily empty or you may be early in the session.")
+        print("   Try re-running later or using GetLegislationInfoIntroducedSince as an alternative.")
+        # continue; we still write empty files for CI stability
 
     bills: List[Dict[str, Any]] = []
     for i, item in enumerate(items, 1):
@@ -219,10 +250,9 @@ def main():
             if rec:
                 bills.append(rec)
         except Exception as e:
-            # Continue on individual failures
             print(f"⚠️  Skipping item {i} due to error: {e}")
 
-    # Sort for stability: by prefix (HB/SB/…) then number (if available)
+    # Sort: by prefix (HB/SB/…) then numeric
     def sort_key(b: Dict[str, Any]) -> Tuple[str, int]:
         parts = (b.get("number") or "").split()
         t = parts[0] if parts else ""
