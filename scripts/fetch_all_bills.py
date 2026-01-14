@@ -256,7 +256,7 @@ def fetch_bills_from_wa_legislature() -> List[Dict]:
         # Fetch legislation for current biennium
         # API documentation: https://wslwebservices.leg.wa.gov/legislationservice.asmx
         
-        print("   📡 Calling WA Legislature API...")
+        print("   Calling WA Legislature API...")
         
         # Build list of bill types and ranges to fetch
         bill_ranges = [
@@ -271,7 +271,7 @@ def fetch_bills_from_wa_legislature() -> List[Dict]:
         ]
         
         for bill_type, start, end in bill_ranges:
-            print(f"   🔍 Fetching {bill_type} bills...")
+            print(f"    Fetching {bill_type} bills...")
             
             for bill_num in range(start, end):
                 try:
@@ -308,11 +308,11 @@ def fetch_bills_from_wa_legislature() -> List[Dict]:
                     # Skip individual bill errors
                     continue
         
-        print(f"   ✅ Fetched {len(bills)} bills from API")
+        print(f"  Fetched {len(bills)} bills from API")
         
     except Exception as e:
-        print(f"   ❌ Error fetching from WA Legislature API: {e}")
-        print(f"   ℹ️ Falling back to empty dataset")
+        print(f"   Error fetching from WA Legislature API: {e}")
+        print(f"   Falling back to empty dataset")
     
     return bills
 
@@ -377,7 +377,7 @@ def parse_legislation_xml(root, bill_type: str) -> Optional[Dict]:
         return bill
         
     except Exception as e:
-        print(f"      ⚠️ Error parsing bill XML: {e}")
+        print(f"      Error parsing bill XML: {e}")
         return None
 
 def determine_committee_from_history(history_line: str, bill_number: str) -> str:
@@ -531,7 +531,7 @@ def load_existing_data() -> Optional[Dict]:
 
 def main():
     """Main execution function"""
-    print(f"ðŸš€ Starting Comprehensive WA Legislature Bill Fetcher - {datetime.now()}")
+    print(f" Starting Comprehensive WA Legislature Bill Fetcher - {datetime.now()}")
     print("=" * 60)
     
     # Ensure data directory exists
@@ -542,10 +542,10 @@ def main():
     existing_bills = {}
     if existing_data:
         existing_bills = {bill['id']: bill for bill in existing_data.get('bills', [])}
-        print(f"ðŸ“š Loaded {len(existing_bills)} existing bills")
+        print(f" Loaded {len(existing_bills)} existing bills")
     
     # Fetch comprehensive bill list
-    print("ðŸ“¥ Fetching comprehensive bill data...")
+    print(" Fetching comprehensive bill data...")
     print("   - Checking LegiScan and WA Legislature sources...")
     
     all_bills = fetch_bills_from_wa_legislature()
@@ -560,8 +560,8 @@ def main():
         elif bill != existing_bills[bill['id']]:
             updated_bills.append(bill)
     
-    print(f"   âœ¨ Found {len(new_bills)} new bills")
-    print(f"   ðŸ”„ Updated {len(updated_bills)} existing bills")
+    print(f"   Found {len(new_bills)} new bills")
+    print(f"   Updated {len(updated_bills)} existing bills")
     
     # Merge with existing bills
     for bill in all_bills:
@@ -580,11 +580,11 @@ def main():
     create_sync_log(len(final_bills), len(new_bills), "success")
     
     print("=" * 60)
-    print(f"âœ… Successfully updated database:")
+    print(f" Successfully updated database:")
     print(f"   - Total bills: {len(final_bills)}")
     print(f"   - New bills: {len(new_bills)}")
     print(f"   - Updated bills: {len(updated_bills)}")
-    print(f"ðŸ Update complete at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f" Update complete at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 def create_stats_file(bills: List[Dict]):
     """Create comprehensive statistics file"""
@@ -669,7 +669,7 @@ def create_stats_file(bills: List[Dict]):
     with open(stats_file, 'w') as f:
         json.dump(stats, f, indent=2)
     
-    print(f"ðŸ“Š Statistics file updated with {len(stats['byStatus'])} statuses, {len(stats['byCommittee'])} committees")
+    print(f" Statistics file updated with {len(stats['byStatus'])} statuses, {len(stats['byCommittee'])} committees")
 
 if __name__ == "__main__":
     main()
