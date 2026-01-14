@@ -215,25 +215,36 @@ function handleHashChange() {
     }
     
     // Check if it's a bill type
-    const billType = hash.toUpperCase() || 'ALL';
+    // Default to 'all' if no hash
+    const billType = hash ? (hash.toLowerCase() === 'all' ? 'all' : hash.toUpperCase()) : 'all';
+    
     if (APP_CONFIG.billTypes[billType]) {
         navigateToBillType(billType);
+    } else {
+        // Invalid bill type, default to all
+        navigateToBillType('all');
     }
 }
 
 // Navigate to a specific bill type
 function navigateToBillType(type) {
-    type = type.toUpperCase();
+    // Normalize the type - convert to uppercase except for 'all'
+    const normalizedType = type.toLowerCase() === 'all' ? 'all' : type.toUpperCase();
     
-    if (!APP_CONFIG.billTypes[type]) {
-        type = 'ALL';
+    // Validate the type exists in config
+    if (!APP_CONFIG.billTypes[normalizedType]) {
+        console.warn(`Invalid bill type: ${type}, defaulting to 'all'`);
+        type = 'all';
+    } else {
+        type = normalizedType;
     }
     
     APP_STATE.currentBillType = type;
     
     // Update active nav tab
     document.querySelectorAll('.nav-tab').forEach(tab => {
-        if (tab.dataset.type.toUpperCase() === type) {
+        const tabType = tab.dataset.type.toLowerCase() === 'all' ? 'all' : tab.dataset.type.toUpperCase();
+        if (tabType === type) {
             tab.classList.add('active');
         } else {
             tab.classList.remove('active');
@@ -249,7 +260,7 @@ function navigateToBillType(type) {
     window.location.hash = type.toLowerCase();
     
     // Update filters - clear type filter when switching pages
-    if (type !== 'ALL') {
+    if (type !== 'all') {
         APP_STATE.filters.type = '';
         // Also clear type filter tags
         document.querySelectorAll('.filter-tag[data-filter="type"]').forEach(tag => {
@@ -291,89 +302,13 @@ async function loadBillsData() {
             APP_STATE.lastSync = data.lastSync || null;
             showToast('📦 Using cached data');
         } else {
-            // Load sample data
-            loadSampleData();
-            showToast('📝 Loading sample data');
+            // No data available
+            APP_STATE.bills = [];
+            showToast('⚠️ No bill data available');
         }
     }
     
     updateSyncStatus();
-}
-
-// Load Sample Data
-function loadSampleData() {
-    APP_STATE.bills = [
-        {
-            id: 'SB5872',
-            number: 'SB 5872',
-            title: 'Early Childhood Education and Assistance Program Account',
-            sponsor: 'Sen. Claire Wilson',
-            description: 'Establishes account for private funds to support ECEAP',
-            status: 'prefiled',
-            committee: 'Education',
-            priority: 'high',
-            topic: 'Education',
-            introducedDate: '2026-01-08',
-            lastUpdated: new Date().toISOString(),
-            hearings: [{ date: '2026-01-15', time: '10:00 AM', committee: 'Education' }]
-        },
-        {
-            id: 'HB2225',
-            number: 'HB 2225',
-            title: 'Regulating Artificial Intelligence Companion Chatbots',
-            sponsor: 'Rep. Lisa Callan',
-            description: 'Requires AI chatbot developers to implement protocols',
-            status: 'prefiled',
-            committee: 'Consumer Protection',
-            priority: 'high',
-            topic: 'Technology',
-            introducedDate: '2026-01-09',
-            lastUpdated: new Date().toISOString(),
-            hearings: []
-        },
-        {
-            id: 'SJR8001',
-            number: 'SJR 8001',
-            title: 'Constitutional Amendment - Education Funding',
-            sponsor: 'Sen. Mark Mullet',
-            description: 'Proposes constitutional amendment for education funding',
-            status: 'prefiled',
-            committee: 'Ways & Means',
-            priority: 'high',
-            topic: 'Education',
-            introducedDate: '2026-01-10',
-            lastUpdated: new Date().toISOString(),
-            hearings: []
-        },
-        {
-            id: 'HJR4001',
-            number: 'HJR 4001',
-            title: 'Constitutional Amendment - Tax Structure',
-            sponsor: 'Rep. April Berg',
-            description: 'Proposes changes to state tax structure',
-            status: 'prefiled',
-            committee: 'Finance',
-            priority: 'medium',
-            topic: 'Tax & Revenue',
-            introducedDate: '2026-01-11',
-            lastUpdated: new Date().toISOString(),
-            hearings: []
-        },
-        {
-            id: 'SCR8401',
-            number: 'SCR 8401',
-            title: 'Adjournment Resolution',
-            sponsor: 'Sen. John Lovick',
-            description: 'Concurrent resolution for legislative adjournment',
-            status: 'prefiled',
-            committee: 'Rules',
-            priority: 'low',
-            topic: 'General Government',
-            introducedDate: '2026-01-12',
-            lastUpdated: new Date().toISOString(),
-            hearings: []
-        }
-    ];
 }
 
 // Render Functions
@@ -462,10 +397,10 @@ function filterBills() {
     let filtered = [...APP_STATE.bills];
     
     // Filter by current bill type page
-    if (APP_STATE.currentBillType !== 'all') {
+    if (APP_STATE.currentBillType && APP_STATE.currentBillType.toLowerCase() !== 'all') {
         filtered = filtered.filter(bill => {
             const billType = bill.number.split(' ')[0];
-            return billType === APP_STATE.currentBillType;
+            return billType.toUpperCase() === APP_STATE.currentBillType.toUpperCase();
         });
     }
     
