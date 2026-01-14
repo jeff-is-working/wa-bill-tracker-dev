@@ -265,111 +265,181 @@ def extract_hearing_time(history_line: str) -> str:
 
 def fetch_bills_from_wa_legislature() -> List[Dict]:
     """
-    Fetch bill list from Washington State Legislature
-    This function should be updated to actually fetch from leg.wa.gov API
+    Fetch bill list from Washington State Legislature API
+    Uses the web service API at wslwebservices.leg.wa.gov
     """
     bills = []
     
     try:
-        # TODO: Implement actual API calls to leg.wa.gov
-        # For now, returning actual prefiled bills for 2026 session
-        # These should be replaced with real API data
+        # WA Legislature Web Services API endpoint
+        api_base = "https://wslwebservices.leg.wa.gov"
         
-        actual_bills = [
-            # Governor request bills
-            {"number": "SB 5872", "title": "Early Childhood Education and Assistance Program Account", "sponsor": "Sen. Claire Wilson", "historyLine": "Public hearing scheduled in Early Learning & K-12 Education at 10:30 AM"},
-            {"number": "HB 2159", "title": "Early Childhood Education and Assistance Program Account", "sponsor": "Rep. Steve Bergquist", "historyLine": "First reading, referred to Education"},
-            {"number": "SB 5984", "title": "Regulating artificial intelligence companion chatbots", "sponsor": "Sen. Lisa Wellman", "historyLine": "Public hearing scheduled 1/16/2026 at 1:30 PM"},
-            {"number": "HB 2225", "title": "Regulating artificial intelligence companion chatbots", "sponsor": "Rep. Lisa Callan", "historyLine": "Executive session scheduled in committee"},
-            {"number": "SB 6026", "title": "Changing commercial zoning to support housing", "sponsor": "Sen. Emily Alvarado", "historyLine": "Prefiled for introduction"},
-            
-            # Energy and environment
-            {"number": "HB 2090", "title": "Advanced nuclear energy integration", "sponsor": "Rep. Stephanie Barnard", "historyLine": "Introduced and read first time"},
-            {"number": "HB 1018", "title": "Adding nuclear fusion to energy facility site evaluation", "sponsor": "Rep. Jake Fey", "historyLine": "Passed to Rules Committee for second reading"},
-            {"number": "HB 1183", "title": "Enhancing affordable and sustainable building construction", "sponsor": "Rep. Davina Duerr", "historyLine": "Prefiled for introduction"},
-            
-            # Transportation
-            {"number": "HB 1921", "title": "Transportation revenue from road usage", "sponsor": "Rep. Jake Fey", "historyLine": "Referred to Transportation Committee"},
-            {"number": "SB 5726", "title": "Transportation revenue from road usage", "sponsor": "Sen. Ramos", "historyLine": "Public hearing 1/15/2026"},
-            
-            # Education
-            {"number": "HB 2147", "title": "School materials and supplies funding increase", "sponsor": "Rep. Mia Gregerson", "historyLine": "Prefiled for introduction"},
-            {"number": "HB 2099", "title": "ECEAP access for military families", "sponsor": "Rep. Mari Leavitt", "historyLine": "Introduced and read first time"},
-            
-            # Public safety
-            {"number": "SB 5853", "title": "Protecting elected officials from political violence", "sponsor": "Sen. Jeff Wilson", "historyLine": "Prefiled for introduction"},
-            
-            # Tax and revenue
-            {"number": "HB 2121", "title": "Sales tax exemption for nonprofits and schools", "sponsor": "Rep. Walsh", "historyLine": "Prefiled for introduction"},
-            {"number": "SB 5849", "title": "State treasurer revenue initiative", "sponsor": "Sen. Adrian Cortes", "historyLine": "Prefiled for introduction"},
-            
-            # Housing
-            {"number": "HB 1345", "title": "Detached ADUs in rural areas", "sponsor": "Rep. Strom Peterson", "historyLine": "Third reading, passed House. In Senate"},
-            {"number": "SB 5613", "title": "Non-subjective development regulations", "sponsor": "Sen. Joe Nguyen", "historyLine": "Referred to Housing Committee"},
-            {"number": "SB 5729", "title": "Limiting third-party permit reviews", "sponsor": "Sen. John Lovick", "historyLine": "Executive action taken in committee"},
-            {"number": "HB 1110", "title": "Middle housing development", "sponsor": "Rep. Jessica Bateman", "historyLine": "Third reading, final passage"},
-            
-            # Technology and privacy
-            {"number": "HB 2112", "title": "Age verification for adult content online", "sponsor": "Rep. Mari Leavitt", "historyLine": "Prefiled for introduction"},
-            
-            # Consumer protection
-            {"number": "HB 2114", "title": "Free license plate replacement", "sponsor": "Rep. Andrew Engell", "historyLine": "Prefiled for introduction"},
-            
-            # Budget
-            {"number": "HB 1216", "title": "Capital budget 2025-2027", "sponsor": "Rep. Mike Steele", "historyLine": "Signed by Governor"},
-            
-            # Add more bills
-            {"number": "HB 1001", "title": "Auditor duties", "sponsor": "Rep. Ed Orcutt", "historyLine": "Prefiled for introduction"},
-            {"number": "HB 1002", "title": "Establishing a lifeline fund", "sponsor": "Rep. My-Linh Thai", "historyLine": "Prefiled for introduction"},
-            {"number": "HB 1003", "title": "Dual credit program access", "sponsor": "Rep. Mari Leavitt", "historyLine": "Prefiled for introduction"},
-            {"number": "HB 1004", "title": "Bridge jumping prevention", "sponsor": "Rep. Tina Orwall", "historyLine": "Failed to pass out of committee"},
-            {"number": "HB 1005", "title": "Military spouse employment", "sponsor": "Rep. Jacquelin Maycumber", "historyLine": "Prefiled for introduction"},
-            
-            {"number": "SB 5001", "title": "Public facility districts", "sponsor": "Sen. Mark Mullet", "historyLine": "Prefiled for introduction"},
-            {"number": "SB 5002", "title": "Alcohol concentration", "sponsor": "Sen. John Lovick", "historyLine": "Prefiled for introduction"},
-            {"number": "SB 5003", "title": "Snohomish county judges", "sponsor": "Sen. June Robinson", "historyLine": "Prefiled for introduction"},
-            {"number": "SB 5004", "title": "Business corporations", "sponsor": "Sen. Mike Padden", "historyLine": "Prefiled for introduction"},
-            {"number": "SB 5005", "title": "Small city and town facilities", "sponsor": "Sen. Brad Hawkins", "historyLine": "Vetoed by Governor"},
+        # Fetch legislation for current biennium
+        # API documentation: https://wslwebservices.leg.wa.gov/legislationservice.asmx
+        
+        print("   📡 Calling WA Legislature API...")
+        
+        # Build list of bill types and ranges to fetch
+        bill_ranges = [
+            ("HB", 1000, 3000),
+            ("SB", 5000, 7000),
+            ("HJR", 4000, 4100),
+            ("SJR", 8000, 8100),
+            ("HJM", 4000, 4050),
+            ("SJM", 8000, 8050),
+            ("HCR", 4400, 4450),
+            ("SCR", 8400, 8450),
         ]
         
-        for bill_data in actual_bills:
-            bill_id = bill_data["number"].replace(" ", "")
+        for bill_type, start, end in bill_ranges:
+            print(f"   🔍 Fetching {bill_type} bills...")
             
-            # Map the status from the history line
-            status = map_status_from_history(bill_data.get("historyLine", ""))
-            
-            bill = {
-                "id": bill_id,
-                "number": bill_data["number"],
-                "title": bill_data["title"],
-                "sponsor": bill_data["sponsor"],
-                "description": f"A bill relating to {bill_data['title'].lower()}",
-                "status": status,
-                "historyLine": bill_data.get("historyLine", ""),
-                "committee": determine_committee(bill_data["number"], bill_data["title"]),
-                "priority": determine_priority(bill_data["title"]),
-                "topic": determine_topic(bill_data["title"]),
-                "introducedDate": "2026-01-12",
-                "lastUpdated": datetime.now().isoformat(),
-                "legUrl": f"{BASE_URL}/billsummary?BillNumber={bill_data['number'].split()[1]}&Year={YEAR}",
-                "hearings": []
-            }
-            
-            # Extract hearing date from history line if present
-            hearing_date = extract_hearing_date(bill_data.get("historyLine", ""))
-            if hearing_date:
-                bill["hearings"] = [{
-                    "date": hearing_date,
-                    "time": extract_hearing_time(bill_data.get("historyLine", "")),
-                    "committee": bill["committee"]
-                }]
-            
-            bills.append(bill)
-            
+            for bill_num in range(start, end):
+                try:
+                    # Call the GetLegislation API
+                    url = f"{api_base}/LegislationService.asmx/GetLegislation"
+                    params = {
+                        'biennium': SESSION,
+                        'billNumber': str(bill_num)
+                    }
+                    
+                    response = requests.get(url, params=params, timeout=10)
+                    
+                    if response.status_code == 200:
+                        # Parse XML response
+                        import xml.etree.ElementTree as ET
+                        root = ET.fromstring(response.content)
+                        
+                        # Check if bill exists
+                        bill_id_elem = root.find('.//BillId')
+                        if bill_id_elem is not None and bill_id_elem.text:
+                            bill_data = parse_legislation_xml(root, bill_type)
+                            if bill_data:
+                                bills.append(bill_data)
+                                if len(bills) % 10 == 0:
+                                    print(f"      Found {len(bills)} bills so far...")
+                    
+                    # Rate limiting - be nice to the API
+                    time.sleep(0.1)
+                    
+                except requests.exceptions.Timeout:
+                    print(f"      ⏱️ Timeout for {bill_type} {bill_num}, skipping...")
+                    continue
+                except Exception as e:
+                    # Skip individual bill errors
+                    continue
+        
+        print(f"   ✅ Fetched {len(bills)} bills from API")
+        
     except Exception as e:
-        print(f"Error fetching bills: {e}")
+        print(f"   ❌ Error fetching from WA Legislature API: {e}")
+        print(f"   ℹ️ Falling back to empty dataset")
     
     return bills
+
+def parse_legislation_xml(root, bill_type: str) -> Optional[Dict]:
+    """
+    Parse XML response from WA Legislature API
+    """
+    try:
+        # Extract bill information from XML
+        bill_id = root.findtext('.//BillId', '')
+        bill_number = root.findtext('.//BillNumber', '')
+        short_description = root.findtext('.//ShortDescription', '')
+        long_description = root.findtext('.//LongDescription', '')
+        introduced_date = root.findtext('.//IntroducedDate', '')
+        
+        # Get sponsor information
+        prime_sponsor_id = root.findtext('.//PrimeSponsorID', '')
+        sponsor_name = root.findtext('.//PrimeSponsor/Name', 'Unknown Sponsor')
+        
+        # Get current status
+        status_elem = root.find('.//CurrentStatus')
+        history_line = ""
+        if status_elem is not None:
+            history_line = status_elem.findtext('.//HistoryLine', '')
+        
+        # Construct full bill number with type
+        full_bill_number = f"{bill_type} {bill_number}"
+        
+        if not bill_id or not bill_number:
+            return None
+        
+        # Map status from history
+        status = map_status_from_history(history_line)
+        
+        # Create bill object
+        bill = {
+            "id": bill_id.replace(" ", ""),
+            "number": full_bill_number,
+            "title": short_description or long_description or "No title available",
+            "sponsor": sponsor_name,
+            "description": long_description or short_description or "No description available",
+            "status": status,
+            "historyLine": history_line,
+            "committee": determine_committee_from_history(history_line, full_bill_number),
+            "priority": determine_priority(short_description or long_description or ""),
+            "topic": determine_topic(short_description or long_description or ""),
+            "introducedDate": introduced_date.split('T')[0] if introduced_date else "2026-01-12",
+            "lastUpdated": datetime.now().isoformat(),
+            "legUrl": f"{BASE_URL}/billsummary?BillNumber={bill_number}&Year={YEAR}",
+            "hearings": []
+        }
+        
+        # Extract hearing date from history line if present
+        hearing_date = extract_hearing_date(history_line)
+        if hearing_date:
+            bill["hearings"] = [{
+                "date": hearing_date,
+                "time": extract_hearing_time(history_line),
+                "committee": bill["committee"]
+            }]
+        
+        return bill
+        
+    except Exception as e:
+        print(f"      ⚠️ Error parsing bill XML: {e}")
+        return None
+
+def determine_committee_from_history(history_line: str, bill_number: str) -> str:
+    """
+    Determine committee from history line or bill characteristics
+    """
+    if not history_line:
+        # Fallback to generic committee based on bill type
+        return determine_committee(bill_number, "")
+    
+    history_lower = history_line.lower()
+    
+    # Try to extract committee name from history
+    if "referred to" in history_lower:
+        # Extract committee name after "referred to"
+        match = re.search(r'referred to\s+([^;,.]+)', history_lower, re.IGNORECASE)
+        if match:
+            return match.group(1).strip().title()
+    
+    if "committee on" in history_lower:
+        match = re.search(r'committee on\s+([^;,.]+)', history_lower, re.IGNORECASE)
+        if match:
+            return match.group(1).strip().title()
+    
+    # Check for specific committee names in history
+    committees = [
+        "Education", "Transportation", "Finance", "Health", "Housing",
+        "Environment", "Energy", "Technology", "Ways & Means", "Rules",
+        "Appropriations", "Agriculture", "Capital Budget", "Commerce",
+        "Economic Development", "Government Operations", "Human Services",
+        "Labor", "Law & Justice", "Local Government", "Natural Resources",
+        "Public Safety", "Regulatory Reform", "State Government",
+        "Veterans & Military Affairs"
+    ]
+    
+    for committee in committees:
+        if committee.lower() in history_lower:
+            return committee
+    
+    # Final fallback
+    return determine_committee(bill_number, "")
 
 def determine_committee(bill_number: str, title: str) -> str:
     """Determine committee assignment based on bill number and title"""
