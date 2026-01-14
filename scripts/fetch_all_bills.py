@@ -104,6 +104,7 @@ def fetch_bill_details(bill_number: str) -> Optional[Dict]:
     # Simulate bill data (in production, this would be fetched from the actual API)
     # Only return data for bills that would actually exist
     sample_bills = {
+        
     }
     
     # Check if this is a known bill
