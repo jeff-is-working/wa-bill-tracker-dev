@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-01-14T02:19:16.250672",
+  "lastSync": "2026-01-14T02:20:05.259541",
   "sessionYear": 2026,
   "sessionStart": "2026-01-12",
   "sessionEnd": "2026-03-12",
@@ -60,24 +60,22 @@
     {
       "id": "HB2090",
       "number": "HB 2090",
-      "title": "AN ACT Relating to integrating advanced nuclear energy into the state energy strategy;",
-      "sponsor": "(Barnard)",
-      "description": "A bill relating to an act relating to integrating advanced nuclear energy into the state energy strategy;",
-      "status": "H Env & Energy",
-      "committee": "Environment & Energy",
+      "title": "Advanced nuclear energy integration",
+      "sponsor": "Rep. Stephanie Barnard",
+      "description": "An Act Relating to integrating advanced nuclear energy into Washington's clean energy portfolio",
+      "status": "prefiled",
+      "committee": "Unknown",
       "priority": "medium",
       "topic": "Environment",
-      "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T06:05:44.218350",
+      "introducedDate": "2026-01-10",
+      "lastUpdated": "2026-01-10T00:00:00",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2090&Year=2026",
-      "hearings": [
-        {
-          "date": "2026-01-13",
-          "committee": "Environment & Energy",
-          "type": "Public Hearing",
-          "location": "John L. O'Brien Building House Hearing Rm B and Virtual"
-        }
-      ]
+      "hearings": [],
+      "companions": [],
+      "biennium": "2025-26",
+      "historyLine": "Prefiled for introduction.",
+      "amended": false,
+      "vetoed": false
     },
     {
       "id": "HB2091",
@@ -1172,17 +1170,24 @@
     {
       "id": "HB2159",
       "number": "HB 2159",
-      "title": "AN ACT Relating to establishing the preK promise account;",
-      "sponsor": "(Bergquist)",
-      "description": "A bill relating to an act relating to establishing the prek promise account;",
-      "status": "H Approps",
-      "committee": "unknown",
+      "title": "Early Childhood Education and Assistance Program Account",
+      "sponsor": "Rep. Steve Bergquist",
+      "description": "An Act Relating to creating the early learning facilities revolving account",
+      "status": "prefiled",
+      "committee": "Unknown",
       "priority": "medium",
-      "topic": "General Government",
-      "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T06:05:44.220248",
+      "topic": "Education",
+      "introducedDate": "2026-01-08",
+      "lastUpdated": "2026-01-08T00:00:00",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2159&Year=2026",
-      "hearings": []
+      "hearings": [],
+      "companions": [
+        "SB 5872"
+      ],
+      "biennium": "2025-26",
+      "historyLine": "Prefiled for introduction.",
+      "amended": false,
+      "vetoed": false
     },
     {
       "id": "HB2160",
@@ -2232,17 +2237,24 @@
     {
       "id": "HB2225",
       "number": "HB 2225",
-      "title": "AN ACT Relating to regulation of artificial intelligence companion chatbots;",
-      "sponsor": "(Callan)",
-      "description": "A bill relating to an act relating to regulation of artificial intelligence companion chatbots;",
-      "status": "H Tech, Econ Dev",
-      "committee": "unknown",
+      "title": "Regulating artificial intelligence companion chatbots",
+      "sponsor": "Rep. Lisa Callan",
+      "description": "An Act Relating to requiring artificial intelligence chatbot developers to implement certain protocols",
+      "status": "prefiled",
+      "committee": "Unknown",
       "priority": "medium",
       "topic": "General Government",
-      "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T06:05:44.222118",
+      "introducedDate": "2026-01-09",
+      "lastUpdated": "2026-01-09T00:00:00",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2225&Year=2026",
-      "hearings": []
+      "hearings": [],
+      "companions": [
+        "SB 5984"
+      ],
+      "biennium": "2025-26",
+      "historyLine": "Prefiled for introduction.",
+      "amended": false,
+      "vetoed": false
     },
     {
       "id": "HB2226",
@@ -5812,17 +5824,31 @@
     {
       "id": "SB5872",
       "number": "SB 5872",
-      "title": "AN ACT Relating to establishing the preK promise account;",
-      "sponsor": "(Wilson, C.)",
-      "description": "A bill relating to an act relating to establishing the prek promise account;",
-      "status": "S Ways & Means",
-      "committee": "unknown",
+      "title": "Early Childhood Education and Assistance Program Account",
+      "sponsor": "Sen. Claire Wilson",
+      "description": "An Act Relating to creating the early learning facilities revolving account; amending RCW 43.31.569 and 43.31.577; adding new sections to chapter 43.31 RCW; and creating a new section.",
+      "status": "prefiled",
+      "committee": "Early Learning & K-12 Education",
       "priority": "medium",
-      "topic": "General Government",
-      "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T06:05:44.228585",
+      "topic": "Education",
+      "introducedDate": "2026-01-08",
+      "lastUpdated": "2026-01-08T00:00:00",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5872&Year=2026",
-      "hearings": []
+      "hearings": [
+        {
+          "date": "2026-01-15",
+          "time": "10:00",
+          "committee": "Early Learning & K-12 Education",
+          "location": "Senate Hearing Room 4"
+        }
+      ],
+      "companions": [
+        "HB 2159"
+      ],
+      "biennium": "2025-26",
+      "historyLine": "Prefiled for introduction.",
+      "amended": false,
+      "vetoed": false
     },
     {
       "id": "SB5873",
@@ -7555,17 +7581,24 @@
     {
       "id": "SB5984",
       "number": "SB 5984",
-      "title": "AN ACT Relating to regulation of artificial intelligence companion chatbots;",
-      "sponsor": "(Wellman)",
-      "description": "A bill relating to an act relating to regulation of artificial intelligence companion chatbots;",
-      "status": "S Environment, En",
-      "committee": "unknown",
+      "title": "Regulating artificial intelligence companion chatbots",
+      "sponsor": "Sen. Lisa Wellman",
+      "description": "An Act Relating to regulating artificial intelligence companion chatbots to protect minors and vulnerable populations",
+      "status": "prefiled",
+      "committee": "Unknown",
       "priority": "medium",
       "topic": "General Government",
-      "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T06:05:44.231777",
+      "introducedDate": "2026-01-09",
+      "lastUpdated": "2026-01-09T00:00:00",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5984&Year=2026",
-      "hearings": []
+      "hearings": [],
+      "companions": [
+        "HB 2225"
+      ],
+      "biennium": "2025-26",
+      "historyLine": "Prefiled for introduction.",
+      "amended": false,
+      "vetoed": false
     },
     {
       "id": "SB5985",
@@ -8213,17 +8246,22 @@
     {
       "id": "SB6026",
       "number": "SB 6026",
-      "title": "AN ACT Relating to residential development in commercial and mixed-use zones;",
-      "sponsor": "(Alvarado)",
-      "description": "A bill relating to an act relating to residential development in commercial and mixed-use zones;",
-      "status": "S Housing",
-      "committee": "unknown",
+      "title": "Changing commercial zoning to support housing",
+      "sponsor": "Sen. Emily Alvarado",
+      "description": "An Act Relating to modifying commercial zoning regulations to facilitate housing development",
+      "status": "prefiled",
+      "committee": "Unknown",
       "priority": "medium",
-      "topic": "General Government",
-      "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T06:05:44.233578",
+      "topic": "Housing",
+      "introducedDate": "2026-01-10",
+      "lastUpdated": "2026-01-10T00:00:00",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=6026&Year=2026",
-      "hearings": []
+      "hearings": [],
+      "companions": [],
+      "biennium": "2025-26",
+      "historyLine": "Prefiled for introduction.",
+      "amended": false,
+      "vetoed": false
     },
     {
       "id": "SB6027",
@@ -8983,10 +9021,10 @@
     }
   ],
   "metadata": {
-    "source": "Washington State Legislature Web Services API",
-    "apiUrl": "https://wslwebservices.leg.wa.gov/",
+    "source": "Washington State Legislature",
     "updateFrequency": "daily",
-    "dataVersion": "3.1.0",
+    "dataVersion": "2.0.0",
+    "includesRevived": true,
     "billTypes": [
       "HB",
       "SB",
@@ -8995,8 +9033,9 @@
       "HJM",
       "SJM",
       "HCR",
-      "SCR"
-    ],
-    "includesHearings": true
+      "SCR",
+      "I",
+      "R"
+    ]
   }
 }
