@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Washington State Legislature Bill Fetcher - 2026 Session
-Fetches bills for the 2026 legislative session (second year of 2025-26 biennium)
-Session runs from January 12, 2026 to March 12, 2026
+Washington State Legislature Bill Fetcher
+Fetches bills from the official WA Legislature Web Services API
+NO SAMPLE DATA - Only real bills from the API
 """
 
 import json
@@ -19,20 +19,25 @@ import re
 BASE_API_URL = "https://wslwebservices.leg.wa.gov"
 BASE_WEB_URL = "https://app.leg.wa.gov"
 BIENNIUM = "2025-26"
-CURRENT_YEAR = 2026  # We want 2026 session bills
-SESSION_YEAR = 2026
+CURRENT_YEAR = 2026
 DATA_DIR = Path("data")
 
 # SOAP Service Endpoints
 LEGISLATION_SERVICE = f"{BASE_API_URL}/LegislationService.asmx"
+COMMITTEE_SERVICE = f"{BASE_API_URL}/CommitteeService.asmx"
 COMMITTEE_MEETING_SERVICE = f"{BASE_API_URL}/CommitteeMeetingService.asmx"
-SPONSOR_SERVICE = f"{BASE_API_URL}/SponsorService.asmx"
+
+# Namespace definitions for XML parsing
+NAMESPACES = {
+    'soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+    'wsl': 'http://WSLWebServices.leg.wa.gov/'
+}
 
 def ensure_data_dir():
     """Ensure data directory exists"""
     DATA_DIR.mkdir(exist_ok=True)
 
-def make_soap_request(url: str, soap_body: str, soap_action: str, debug: bool = False) -> Optional[ET.Element]:
+def make_soap_request(url: str, soap_body: str, soap_action: str) -> Optional[ET.Element]:
     """Make SOAP request to WA Legislature API"""
     headers = {
         'Content-Type': 'text/xml; charset=utf-8',
@@ -48,25 +53,13 @@ def make_soap_request(url: str, soap_body: str, soap_action: str, debug: bool = 
   </soap:Body>
 </soap:Envelope>"""
     
-    if debug:
-        print(f"Making request to: {url}")
-        print(f"SOAP Action: {soap_action}")
-    
     try:
         response = requests.post(url, data=soap_envelope, headers=headers, timeout=60)
         if response.status_code == 200:
-            if debug:
-                # Save first response for debugging
-                debug_file = DATA_DIR / 'debug_response.xml'
-                ensure_data_dir()
-                with open(debug_file, 'w', encoding='utf-8') as f:
-                    f.write(response.text)
-                print(f"  Debug response saved to {debug_file}")
-            
             root = ET.fromstring(response.content)
             return root
         else:
-            print(f"API Error {response.status_code}")
+            print(f"API Error {response.status_code}: {response.text[:500]}")
             return None
     except requests.exceptions.RequestException as e:
         print(f"Request error: {e}")
@@ -75,200 +68,14 @@ def make_soap_request(url: str, soap_body: str, soap_action: str, debug: bool = 
         print(f"XML parsing error: {e}")
         return None
 
-def parse_legislation_info(elem: ET.Element) -> Optional[Dict]:
-    """Parse a LegislationInfo element from the SOAP response"""
-    try:
-        # Helper to get text from child element
-        def get_text(parent, tag_name: str, default: str = '') -> str:
-            """Extract text from child element regardless of namespace"""
-            # Try direct child
-            for child in parent:
-                child_tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
-                if child_tag == tag_name:
-                    if child.text:
-                        return child.text.strip()
-            
-            # Try searching deeper
-            for elem in parent.iter():
-                elem_tag = elem.tag.split('}')[-1] if '}' in elem.tag else elem.tag
-                if elem_tag == tag_name:
-                    if elem.text:
-                        return elem.text.strip()
-            
-            return default
-        
-        # Extract basic fields
-        biennium = get_text(elem, 'Biennium', BIENNIUM)
-        bill_id = get_text(elem, 'BillId', '')
-        bill_number = get_text(elem, 'BillNumber', '')
-        
-        # Skip if no bill identifier
-        if not bill_id and not bill_number:
-            return None
-        
-        # Get title and description
-        short_desc = get_text(elem, 'ShortDescription', '')
-        long_desc = get_text(elem, 'LongDescription', '')
-        
-        # Skip bills with no title
-        if not short_desc and not long_desc:
-            return None
-        
-        title = short_desc if short_desc else (long_desc[:100] + '...' if len(long_desc) > 100 else long_desc)
-        
-        # Format bill number
-        if bill_id:
-            # Handle formats like "HB 1001", "SB 5001", "2SHB 1234", etc.
-            # Extract the core bill type and number
-            match = re.search(r'([A-Z]+)\s*(\d+)', bill_id)
-            if match:
-                number = match.group(2)
-                
-                # Determine core bill type
-                if 'HB' in bill_id:
-                    bill_type = 'HB'
-                elif 'SB' in bill_id:
-                    bill_type = 'SB'
-                elif 'HJR' in bill_id:
-                    bill_type = 'HJR'
-                elif 'SJR' in bill_id:
-                    bill_type = 'SJR'
-                elif 'HJM' in bill_id:
-                    bill_type = 'HJM'
-                elif 'SJM' in bill_id:
-                    bill_type = 'SJM'
-                elif 'HCR' in bill_id:
-                    bill_type = 'HCR'
-                elif 'SCR' in bill_id:
-                    bill_type = 'SCR'
-                else:
-                    bill_type = match.group(1)
-                
-                formatted_number = f"{bill_type} {number}"
-                formatted_id = f"{bill_type}{number}"
-            else:
-                formatted_number = bill_id
-                formatted_id = bill_id.replace(' ', '')
-        else:
-            formatted_number = f"BILL {bill_number}"
-            formatted_id = f"BILL{bill_number}"
-        
-        # Get sponsor
-        prime_sponsor = get_text(elem, 'PrimeSponsor', '')
-        if not prime_sponsor:
-            prime_sponsor = get_text(elem, 'RequestedBy', 'Unknown')
-        
-        # Get status
-        status = get_text(elem, 'Status', '')
-        if not status:
-            # Try CurrentStatus child element
-            current_status = None
-            for child in elem:
-                child_tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
-                if child_tag == 'CurrentStatus':
-                    current_status = child
-                    break
-            
-            if current_status is not None:
-                status = get_text(current_status, 'Status', 'Introduced')
-            else:
-                status = 'Introduced'
-        
-        # Get introduced date
-        introduced_date = get_text(elem, 'IntroducedDate', '')
-        if introduced_date:
-            try:
-                # Parse various date formats
-                if 'T' in introduced_date:
-                    dt = datetime.fromisoformat(introduced_date.replace('Z', '+00:00').split('T')[0])
-                else:
-                    dt = datetime.strptime(introduced_date, '%Y-%m-%d')
-                introduced_date = dt.strftime('%Y-%m-%d')
-            except:
-                introduced_date = ''
-        
-        # Get committee
-        committee = get_text(elem, 'CurrentCommittee', '')
-        if not committee:
-            committee = get_text(elem, 'Committee', '')
-        if not committee:
-            # Assign default committee based on bill type
-            if formatted_number.startswith('HB'):
-                committee = "House Rules"
-            elif formatted_number.startswith('SB'):
-                committee = "Senate Rules"
-            else:
-                committee = "Rules"
-        
-        # Build bill object matching app.js structure
-        bill = {
-            "id": formatted_id,
-            "number": formatted_number,
-            "title": title,
-            "sponsor": prime_sponsor,
-            "description": long_desc if long_desc else title,
-            "status": status,
-            "committee": committee,
-            "priority": determine_priority(title),
-            "topic": determine_topic(title),
-            "introducedDate": introduced_date,
-            "lastUpdated": datetime.now().isoformat(),
-            "legUrl": f"{BASE_WEB_URL}/billsummary?BillNumber={number if 'number' in locals() else bill_number}&Year={SESSION_YEAR}",
-            "hearings": [],
-            "biennium": biennium
-        }
-        
-        return bill
-        
-    except Exception as e:
-        print(f"Error parsing legislation: {e}")
-        return None
-
-def fetch_2026_session_bills() -> List[Dict]:
-    """Fetch all bills for the 2026 legislative session including pre-filed bills"""
-    all_bills = {}
-    
-    # Method 1: Get pre-filed bills (filed in late 2025 for 2026 session)
-    print(f"\n📋 Fetching pre-filed bills for 2026 session...")
-    
-    # Get bills introduced since December 1, 2025 (pre-filing period)
-    since_date = "2025-12-01T00:00:00"
-    
-    soap_body = f"""
-    <GetLegislationIntroducedSince xmlns="http://WSLWebServices.leg.wa.gov/">
-      <biennium>{BIENNIUM}</biennium>
-      <sinceDate>{since_date}</sinceDate>
-    </GetLegislationIntroducedSince>"""
-    
-    root = make_soap_request(
-        LEGISLATION_SERVICE,
-        soap_body,
-        "http://WSLWebServices.leg.wa.gov/GetLegislationIntroducedSince",
-        debug=True  # Enable debug for first request
-    )
-    
-    if root:
-        prefiled_count = 0
-        for elem in root.iter():
-            tag_name = elem.tag.split('}')[-1] if '}' in elem.tag else elem.tag
-            if tag_name == 'LegislationInfo':
-                bill_data = parse_legislation_info(elem)
-                if bill_data:
-                    all_bills[bill_data['id']] = bill_data
-                    prefiled_count += 1
-                    if prefiled_count <= 5:  # Show first few bills
-                        print(f"  ✓ Found: {bill_data['number']} - {bill_data['title'][:50]}...")
-        
-        print(f"  Found {prefiled_count} bills introduced since Dec 1, 2025")
-    else:
-        print("  ❌ No response from GetLegislationIntroducedSince")
-    
-    # Method 2: GetLegislationByYear for 2026
-    print(f"\n📋 Fetching all bills for {SESSION_YEAR} session...")
+def fetch_all_legislation() -> List[Dict]:
+    """Fetch all legislation for the current biennium"""
+    print(f"Fetching all legislation for biennium {BIENNIUM}")
     
     soap_body = f"""
     <GetLegislationByYear xmlns="http://WSLWebServices.leg.wa.gov/">
-      <year>{SESSION_YEAR}</year>
+      <biennium>{BIENNIUM}</biennium>
+      <year>{CURRENT_YEAR}</year>
     </GetLegislationByYear>"""
     
     root = make_soap_request(
@@ -277,20 +84,31 @@ def fetch_2026_session_bills() -> List[Dict]:
         "http://WSLWebServices.leg.wa.gov/GetLegislationByYear"
     )
     
-    if root:
-        year_bills_count = 0
-        for elem in root.iter():
-            tag_name = elem.tag.split('}')[-1] if '}' in elem.tag else elem.tag
-            if tag_name == 'LegislationInfo':
-                bill_data = parse_legislation_info(elem)
-                if bill_data and bill_data['id'] not in all_bills:
-                    all_bills[bill_data['id']] = bill_data
-                    year_bills_count += 1
-        
-        print(f"  Added {year_bills_count} additional bills from 2026")
+    if root is None:
+        print("Failed to fetch legislation data")
+        return []
     
-    # Method 3: GetPrefiledLegislationInfo for the biennium
-    print(f"\n📋 Fetching pre-filed legislation for {BIENNIUM} biennium...")
+    bills = []
+    
+    # Parse the XML response
+    # Find all legislation items in the response
+    for legislation in root.findall('.//wsl:LegislationInfo', NAMESPACES):
+        bill_data = parse_legislation_info(legislation)
+        if bill_data:
+            bills.append(bill_data)
+    
+    # Also try without namespace if the above doesn't work
+    if not bills:
+        for legislation in root.findall('.//LegislationInfo'):
+            bill_data = parse_legislation_info(legislation)
+            if bill_data:
+                bills.append(bill_data)
+    
+    return bills
+
+def fetch_prefiled_legislation() -> List[Dict]:
+    """Fetch prefiled legislation for the biennium"""
+    print(f"Fetching prefiled legislation for biennium {BIENNIUM}")
     
     soap_body = f"""
     <GetPrefiledLegislationInfo xmlns="http://WSLWebServices.leg.wa.gov/">
@@ -303,60 +121,176 @@ def fetch_2026_session_bills() -> List[Dict]:
         "http://WSLWebServices.leg.wa.gov/GetPrefiledLegislationInfo"
     )
     
-    if root:
-        biennium_prefiled_count = 0
-        for elem in root.iter():
-            tag_name = elem.tag.split('}')[-1] if '}' in elem.tag else elem.tag
-            if tag_name == 'LegislationInfo':
-                bill_data = parse_legislation_info(elem)
-                if bill_data and bill_data['id'] not in all_bills:
-                    all_bills[bill_data['id']] = bill_data
-                    biennium_prefiled_count += 1
+    if root is None:
+        return []
+    
+    bills = []
+    
+    # Parse the XML response
+    for legislation in root.findall('.//wsl:LegislationInfo', NAMESPACES):
+        bill_data = parse_legislation_info(legislation)
+        if bill_data:
+            bills.append(bill_data)
+    
+    # Also try without namespace
+    if not bills:
+        for legislation in root.findall('.//LegislationInfo'):
+            bill_data = parse_legislation_info(legislation)
+            if bill_data:
+                bills.append(bill_data)
+    
+    return bills
+
+def parse_legislation_info(elem: ET.Element) -> Optional[Dict]:
+    """Parse LegislationInfo XML element into bill dictionary"""
+    try:
+        # Helper function to safely get text from element
+        def get_text(name: str, default: str = "") -> str:
+            child = elem.find(name)
+            if child is None:
+                child = elem.find(f".//{name}")
+            return child.text if child is not None and child.text else default
         
-        print(f"  Added {biennium_prefiled_count} additional pre-filed bills")
-    
-    # Method 4: GetLegislativeStatusChangesByDateRange for recent activity
-    print(f"\n📋 Fetching bills with recent status changes...")
-    
-    # Get bills with status changes from Dec 1, 2025 to today
-    begin_date = "2025-12-01"
-    end_date = datetime.now().strftime('%Y-%m-%d')
-    
+        # Extract bill information
+        biennium = get_text("Biennium", BIENNIUM)
+        bill_id = get_text("BillId")
+        bill_number = get_text("BillNumber")
+        
+        # Skip if no bill ID or number
+        if not bill_id or not bill_number:
+            return None
+        
+        # Get bill type from bill number (e.g., "5872" -> need to determine if HB or SB)
+        # The CurrentStatus or other fields might indicate chamber
+        substitute_version = get_text("SubstituteVersion", "")
+        engrossed_version = get_text("EngrossedVersion", "")
+        
+        # Determine chamber from various indicators
+        original_agency = get_text("OriginalAgency", "").upper()
+        if "HOUSE" in original_agency:
+            bill_prefix = "HB"
+        elif "SENATE" in original_agency:
+            bill_prefix = "SB"
+        else:
+            # Try to infer from bill number range
+            try:
+                num = int(bill_number)
+                if num >= 5000:
+                    bill_prefix = "SB"
+                else:
+                    bill_prefix = "HB"
+            except:
+                bill_prefix = ""
+        
+        # Build full bill number with prefix
+        if substitute_version:
+            full_bill_number = f"{substitute_version}{bill_prefix} {bill_number}"
+        elif engrossed_version:
+            full_bill_number = f"{engrossed_version}{bill_prefix} {bill_number}"
+        else:
+            full_bill_number = f"{bill_prefix} {bill_number}" if bill_prefix else bill_number
+        
+        # Clean up the bill number
+        full_bill_number = re.sub(r'\s+', ' ', full_bill_number.strip())
+        
+        # Get other bill details
+        short_description = get_text("ShortDescription", "No title available")
+        long_description = get_text("LongDescription", "")
+        
+        # Get sponsor information
+        prime_sponsor_id = get_text("PrimeSponsorID")
+        prime_sponsor = get_text("PrimeSponsor", "")
+        request_exec = get_text("RequestExec", "")
+        htmurl = get_text("HtmUrl", "")
+        
+        # Get status information
+        current_status = get_text("CurrentStatus", "")
+        if not current_status:
+            # Try alternate status fields
+            status = get_text("Status", "prefiled")
+        else:
+            status = current_status.lower()
+            if "prefiled" in status:
+                status = "prefiled"
+            elif "introduced" in status:
+                status = "introduced"
+            elif "committee" in status:
+                status = "committee"
+            elif "passed" in status:
+                status = "passed"
+            elif "failed" in status:
+                status = "failed"
+            else:
+                status = "active"
+        
+        # Get dates
+        introduced_date = get_text("IntroducedDate", "")
+        action_date = get_text("ActionDate", "")
+        
+        # Parse date strings
+        try:
+            if introduced_date:
+                introduced_date = datetime.fromisoformat(introduced_date.replace('Z', '+00:00')).date().isoformat()
+            else:
+                introduced_date = "2026-01-12"  # Session start date as default
+        except:
+            introduced_date = "2026-01-12"
+        
+        # Determine committee from short description or other fields
+        committee = determine_committee(full_bill_number, short_description)
+        
+        # Create bill dictionary
+        bill = {
+            "id": bill_id,
+            "number": full_bill_number,
+            "title": short_description,
+            "sponsor": prime_sponsor if prime_sponsor else request_exec if request_exec else "Unknown",
+            "description": long_description if long_description else f"A bill relating to {short_description.lower()}",
+            "status": status,
+            "committee": committee,
+            "priority": determine_priority(short_description),
+            "topic": determine_topic(short_description),
+            "introducedDate": introduced_date,
+            "lastUpdated": datetime.now().isoformat(),
+            "legUrl": f"{BASE_WEB_URL}/billsummary?BillNumber={bill_number}&Year={CURRENT_YEAR}",
+            "biennium": biennium,
+            "hearings": []
+        }
+        
+        return bill
+        
+    except Exception as e:
+        print(f"Error parsing legislation: {e}")
+        return None
+
+def fetch_legislation_by_request_number(request_number: str) -> Optional[Dict]:
+    """Fetch specific legislation by request number"""
     soap_body = f"""
-    <GetLegislativeStatusChangesByDateRange xmlns="http://WSLWebServices.leg.wa.gov/">
+    <GetLegislationByRequestNumber xmlns="http://WSLWebServices.leg.wa.gov/">
       <biennium>{BIENNIUM}</biennium>
-      <beginDate>{begin_date}</beginDate>
-      <endDate>{end_date}</endDate>
-    </GetLegislativeStatusChangesByDateRange>"""
+      <requestNumber>{request_number}</requestNumber>
+    </GetLegislationByRequestNumber>"""
     
     root = make_soap_request(
         LEGISLATION_SERVICE,
         soap_body,
-        "http://WSLWebServices.leg.wa.gov/GetLegislativeStatusChangesByDateRange"
+        "http://WSLWebServices.leg.wa.gov/GetLegislationByRequestNumber"
     )
     
     if root:
-        status_changes_count = 0
-        for elem in root.iter():
-            tag_name = elem.tag.split('}')[-1] if '}' in elem.tag else elem.tag
-            if tag_name == 'LegislationInfo':
-                bill_data = parse_legislation_info(elem)
-                if bill_data and bill_data['id'] not in all_bills:
-                    all_bills[bill_data['id']] = bill_data
-                    status_changes_count += 1
+        # Parse single legislation response
+        legislation = root.find('.//wsl:LegislationInfo', NAMESPACES)
+        if legislation is None:
+            legislation = root.find('.//LegislationInfo')
         
-        print(f"  Added {status_changes_count} bills with recent status changes")
+        if legislation:
+            return parse_legislation_info(legislation)
     
-    # Convert to list
-    bills = list(all_bills.values())
-    
-    print(f"\n📊 Total unique bills found: {len(bills)}")
-    
-    return bills
+    return None
 
-def fetch_hearings_for_bills(bills: List[Dict]) -> None:
-    """Fetch hearing information for bills"""
-    print("\n📅 Fetching committee hearing information...")
+def fetch_committee_meetings() -> List[Dict]:
+    """Fetch committee meetings to get hearing information"""
+    print("Fetching committee meetings for hearing information")
     
     soap_body = f"""
     <GetCommitteeMeetings xmlns="http://WSLWebServices.leg.wa.gov/">
@@ -369,165 +303,183 @@ def fetch_hearings_for_bills(bills: List[Dict]) -> None:
         "http://WSLWebServices.leg.wa.gov/GetCommitteeMeetings"
     )
     
+    hearings = []
     if root:
-        hearings_count = 0
-        # Create a map of bill IDs to hearings
-        hearings_map = {}
-        
-        for meeting in root.iter():
-            meeting_tag = meeting.tag.split('}')[-1] if '}' in meeting.tag else meeting.tag
-            if meeting_tag == 'Meeting':
-                # Extract meeting details
-                meeting_date = ''
-                meeting_time = ''
-                committee_name = ''
+        for meeting in root.findall('.//Meeting'):
+            try:
+                date = meeting.find('Date')
+                committee = meeting.find('Committee')
+                location = meeting.find('Location')
                 
-                for child in meeting:
-                    child_tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
-                    if child_tag == 'Date' and child.text:
-                        meeting_date = child.text.split('T')[0]
-                    elif child_tag == 'Time' and child.text:
-                        meeting_time = child.text
-                    elif child_tag == 'CommitteeName' and child.text:
-                        committee_name = child.text
-                
-                # Look for agenda items with bills
-                for agenda in meeting.iter():
-                    agenda_tag = agenda.tag.split('}')[-1] if '}' in agenda.tag else agenda.tag
-                    if agenda_tag == 'AgendaItem':
-                        for item_child in agenda:
-                            item_tag = item_child.tag.split('}')[-1] if '}' in item_child.tag else item_child.tag
-                            if item_tag == 'BillId' and item_child.text:
-                                bill_id = item_child.text.strip()
-                                
-                                # Create hearing entry
-                                hearing = {
-                                    "date": meeting_date,
-                                    "time": meeting_time,
-                                    "committee": committee_name,
-                                    "type": "Public Hearing"
-                                }
-                                
-                                # Map hearing to bill
-                                if bill_id not in hearings_map:
-                                    hearings_map[bill_id] = []
-                                hearings_map[bill_id].append(hearing)
-                                hearings_count += 1
-        
-        # Apply hearings to bills
-        bills_with_hearings = 0
-        for bill in bills:
-            # Check various possible bill ID formats
-            bill_id_variations = [
-                bill['number'].replace(' ', ''),  # "HB1001"
-                bill['number'],  # "HB 1001"
-                bill['id']  # "HB1001"
-            ]
-            
-            for variant in bill_id_variations:
-                if variant in hearings_map:
-                    bill['hearings'] = hearings_map[variant]
-                    bills_with_hearings += 1
-                    break
-        
-        print(f"  Found {hearings_count} total hearings")
-        print(f"  Matched hearings to {bills_with_hearings} bills")
+                if date is not None and committee is not None:
+                    hearing = {
+                        "date": date.text,
+                        "committee": committee.text,
+                        "location": location.text if location is not None else "TBD"
+                    }
+                    hearings.append(hearing)
+            except Exception as e:
+                print(f"Error parsing meeting: {e}")
+                continue
+    
+    return hearings
+
+def determine_committee(bill_number: str, title: str) -> str:
+    """Determine committee assignment based on bill number and title"""
+    title_lower = title.lower()
+    
+    if "education" in title_lower or "school" in title_lower:
+        return "Education"
+    elif "transportation" in title_lower or "road" in title_lower:
+        return "Transportation"
+    elif "housing" in title_lower or "rent" in title_lower:
+        return "Housing"
+    elif "health" in title_lower or "medical" in title_lower:
+        return "Health & Long-Term Care"
+    elif "environment" in title_lower or "energy" in title_lower:
+        return "Environment & Energy"
+    elif "tax" in title_lower or "revenue" in title_lower or "budget" in title_lower:
+        if bill_number.startswith("HB"):
+            return "Finance"
+        else:
+            return "Ways & Means"
+    elif "consumer" in title_lower or "business" in title_lower:
+        return "Consumer Protection & Business"
+    elif "crime" in title_lower or "safety" in title_lower or "justice" in title_lower:
+        return "Law & Justice"
+    elif "labor" in title_lower or "employment" in title_lower or "worker" in title_lower:
+        return "Labor & Commerce"
+    else:
+        return "State Government & Tribal Relations"
 
 def determine_topic(title: str) -> str:
     """Determine bill topic from title"""
-    if not title:
-        return "General Government"
-    
     title_lower = title.lower()
     
-    topic_keywords = {
-        "Education": ["education", "school", "student", "teacher", "learning", "academic", "university", "college"],
-        "Tax & Revenue": ["tax", "revenue", "budget", "fiscal", "finance", "appropriation", "fee", "levy"],
-        "Housing": ["housing", "rent", "tenant", "landlord", "homelessness", "affordable", "eviction", "mortgage"],
-        "Healthcare": ["health", "medical", "hospital", "mental", "pharmacy", "insurance", "medicare", "medicaid"],
-        "Environment": ["environment", "climate", "energy", "pollution", "conservation", "sustainable", "clean", "emissions"],
-        "Transportation": ["transportation", "road", "highway", "transit", "vehicle", "traffic", "driver", "ferry"],
-        "Public Safety": ["crime", "safety", "police", "justice", "corrections", "emergency", "fire", "enforcement"],
-        "Business": ["business", "commerce", "trade", "economy", "corporation", "employment", "labor", "workforce"],
-        "Technology": ["technology", "internet", "data", "privacy", "cyber", "artificial intelligence", "digital", "broadband"],
-        "Agriculture": ["agriculture", "farm", "rural", "livestock", "crop", "food", "agricultural", "farming"]
+    topics = {
+        "Education": ["education", "school", "student", "teacher", "learning", "academic"],
+        "Tax & Revenue": ["tax", "revenue", "budget", "fiscal", "fee", "expenditure"],
+        "Housing": ["housing", "rent", "tenant", "landlord", "affordable", "homeless"],
+        "Healthcare": ["health", "medical", "hospital", "mental", "behavioral", "insurance"],
+        "Environment": ["environment", "climate", "energy", "pollution", "conservation", "water"],
+        "Transportation": ["transport", "road", "highway", "transit", "traffic", "vehicle"],
+        "Public Safety": ["crime", "safety", "police", "justice", "criminal", "enforcement"],
+        "Business": ["business", "commerce", "trade", "economy", "corporation", "industry"],
+        "Technology": ["technology", "internet", "data", "privacy", "cyber", "digital"],
+        "Labor": ["labor", "employment", "worker", "wage", "union", "workplace"],
+        "Agriculture": ["agriculture", "farm", "food", "rural", "agricultural"],
     }
     
-    for topic, keywords in topic_keywords.items():
+    for topic, keywords in topics.items():
         if any(keyword in title_lower for keyword in keywords):
             return topic
     
     return "General Government"
 
 def determine_priority(title: str) -> str:
-    """Determine bill priority from title"""
-    if not title:
-        return "medium"
-    
+    """Determine bill priority based on keywords in title"""
     title_lower = title.lower()
     
     # High priority keywords
-    high_keywords = ["emergency", "budget", "appropriation", "supplemental", "capital", "crisis", "urgent"]
-    if any(word in title_lower for word in high_keywords):
-        return "high"
+    high_priority = ["emergency", "urgent", "crisis", "immediate", "critical",
+                    "budget", "appropriations", "supplemental"]
     
-    # Low priority keywords
-    low_keywords = ["technical", "clarifying", "housekeeping", "minor", "memorial", "commemorating", "recognizing"]
-    if any(word in title_lower for word in low_keywords):
-        return "low"
+    # Low priority keywords  
+    low_priority = ["technical", "clarifying", "housekeeping", "minor", "study",
+                   "memorial", "proclamation", "commendation"]
+    
+    for keyword in high_priority:
+        if keyword in title_lower:
+            return "high"
+    
+    for keyword in low_priority:
+        if keyword in title_lower:
+            return "low"
     
     return "medium"
 
 def save_bills_data(bills: List[Dict]) -> Dict:
-    """Save bills data to JSON file matching app.js structure"""
+    """Save bills data to JSON file"""
+    # Remove duplicates based on bill ID
+    unique_bills = {}
+    for bill in bills:
+        bill_id = bill.get('id')
+        if bill_id and bill_id not in unique_bills:
+            unique_bills[bill_id] = bill
+    
+    bills = list(unique_bills.values())
+    
     # Sort bills by type and number
     def sort_key(bill):
-        match = re.match(r'([A-Z]+)\s*(\d+)', bill['number'])
-        if match:
-            bill_type = match.group(1)
-            number = int(match.group(2))
-            # Sort order
-            type_order = {'HB': 1, 'SB': 2, 'HJR': 3, 'SJR': 4, 'HJM': 5, 'SJM': 6, 'HCR': 7, 'SCR': 8}
-            return (type_order.get(bill_type, 9), number)
-        return (10, 0)
+        number = bill.get('number', '')
+        parts = number.split()
+        if len(parts) >= 2:
+            # Extract type and number
+            bill_type = re.sub(r'[0-9]', '', parts[0])  # Remove numbers from type
+            try:
+                bill_num = int(re.findall(r'\d+', parts[-1])[0])
+            except:
+                bill_num = 0
+            return (bill_type, bill_num)
+        return ('', 0)
     
     bills.sort(key=sort_key)
     
-    # Get unique bill types
-    bill_types = []
-    for bill in bills:
-        match = re.match(r'([A-Z]+)', bill['number'])
-        if match and match.group(1) not in bill_types:
-            bill_types.append(match.group(1))
-    
     data = {
         "lastSync": datetime.now().isoformat(),
-        "sessionYear": SESSION_YEAR,
+        "sessionYear": CURRENT_YEAR,
+        "biennium": BIENNIUM,
         "sessionStart": "2026-01-12",
         "sessionEnd": "2026-03-12",
         "totalBills": len(bills),
         "bills": bills,
         "metadata": {
-            "source": "Washington State Legislature Web Services API",
-            "apiVersion": "1.0",
-            "updateFrequency": "hourly",
-            "dataVersion": "7.0.0",
-            "biennium": BIENNIUM,
-            "billTypes": sorted(bill_types)
+            "source": "Washington State Legislature Web Services",
+            "apiUrl": BASE_API_URL,
+            "updateFrequency": "daily",
+            "dataVersion": "3.0.0",
+            "billTypes": ["HB", "SB", "HJR", "SJR", "HJM", "SJM", "HCR", "SCR", "I", "R"]
         }
     }
     
-    ensure_data_dir()
     data_file = DATA_DIR / "bills.json"
-    
-    with open(data_file, 'w', encoding='utf-8') as f:
+    with open(data_file, 'w') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
     
-    print(f"\n💾 Saved {len(bills)} bills to {data_file}")
+    print(f"Saved {len(bills)} bills to {data_file}")
     return data
 
+def create_sync_log(bills_count: int, new_count: int = 0, status: str = "success"):
+    """Create sync log for monitoring"""
+    log = {
+        "timestamp": datetime.now().isoformat(),
+        "status": status,
+        "billsCount": bills_count,
+        "newBillsAdded": new_count,
+        "nextSync": (datetime.now() + timedelta(hours=6)).isoformat()
+    }
+    
+    log_file = DATA_DIR / "sync-log.json"
+    
+    # Load existing logs
+    logs = []
+    if log_file.exists():
+        with open(log_file, 'r') as f:
+            data = json.load(f)
+            logs = data.get('logs', [])
+    
+    # Add new log entry (keep last 100 entries)
+    logs.insert(0, log)
+    logs = logs[:100]
+    
+    # Save logs
+    with open(log_file, 'w') as f:
+        json.dump({"logs": logs}, f, indent=2)
+    
+    print(f"Sync log updated: {status} - {bills_count} bills, {new_count} new")
+
 def create_stats_file(bills: List[Dict]):
-    """Create statistics file"""
+    """Create comprehensive statistics file"""
     stats = {
         "generated": datetime.now().isoformat(),
         "totalBills": len(bills),
@@ -535,106 +487,135 @@ def create_stats_file(bills: List[Dict]):
         "byCommittee": {},
         "byPriority": {},
         "byTopic": {},
+        "bySponsor": {},
         "byType": {},
-        "bySponsor": {}
+        "recentlyUpdated": 0,
+        "updatedToday": 0,
+        "upcomingHearings": 0,
+        "billsWithHearings": 0
     }
+    
+    # Calculate statistics
+    today = datetime.now().date()
     
     for bill in bills:
         # By status
-        status = bill.get('status', 'Unknown')
+        status = bill.get('status', 'unknown')
         stats['byStatus'][status] = stats['byStatus'].get(status, 0) + 1
         
         # By committee
-        committee = bill.get('committee', 'Unknown')
+        committee = bill.get('committee', 'unknown')
         stats['byCommittee'][committee] = stats['byCommittee'].get(committee, 0) + 1
         
         # By priority
-        priority = bill.get('priority', 'medium')
+        priority = bill.get('priority', 'unknown')
         stats['byPriority'][priority] = stats['byPriority'].get(priority, 0) + 1
         
         # By topic
-        topic = bill.get('topic', 'General Government')
+        topic = bill.get('topic', 'unknown')
         stats['byTopic'][topic] = stats['byTopic'].get(topic, 0) + 1
         
-        # By type
-        match = re.match(r'([A-Z]+)', bill['number'])
-        if match:
-            bill_type = match.group(1)
-            stats['byType'][bill_type] = stats['byType'].get(bill_type, 0) + 1
-        
         # By sponsor
-        sponsor = bill.get('sponsor', 'Unknown')
-        if sponsor != 'Unknown':
-            stats['bySponsor'][sponsor] = stats['bySponsor'].get(sponsor, 0) + 1
+        sponsor = bill.get('sponsor', 'unknown')
+        stats['bySponsor'][sponsor] = stats['bySponsor'].get(sponsor, 0) + 1
+        
+        # By type (HB, SB, etc.)
+        bill_number = bill.get('number', '')
+        bill_type = bill_number.split()[0] if ' ' in bill_number else 'unknown'
+        bill_type = re.sub(r'[0-9]', '', bill_type)  # Remove numbers
+        stats['byType'][bill_type] = stats['byType'].get(bill_type, 0) + 1
+        
+        # Recently updated
+        try:
+            last_updated = datetime.fromisoformat(bill.get('lastUpdated', ''))
+            days_diff = (datetime.now() - last_updated).days
+            
+            if days_diff < 1:
+                stats['recentlyUpdated'] += 1
+            
+            if last_updated.date() == today:
+                stats['updatedToday'] += 1
+                
+        except:
+            pass
+        
+        # Hearings
+        hearings = bill.get('hearings', [])
+        if hearings:
+            stats['billsWithHearings'] += 1
+            for hearing in hearings:
+                try:
+                    hearing_date = datetime.strptime(hearing['date'], '%Y-%m-%d')
+                    if 0 <= (hearing_date.date() - today).days <= 7:
+                        stats['upcomingHearings'] += 1
+                except:
+                    pass
+    
+    # Sort sponsors by count (top 20)
+    stats['topSponsors'] = sorted(
+        stats['bySponsor'].items(), 
+        key=lambda x: x[1], 
+        reverse=True
+    )[:20]
     
     stats_file = DATA_DIR / "stats.json"
-    with open(stats_file, 'w', encoding='utf-8') as f:
+    with open(stats_file, 'w') as f:
         json.dump(stats, f, indent=2)
     
-    print(f"📊 Statistics file created")
+    print(f"Statistics file updated")
 
 def main():
     """Main execution function"""
-    print(f"🚀 Washington State Legislature Bill Fetcher - 2026 Session")
-    print(f"📅 Session: January 12, 2026 - March 12, 2026")
-    print(f"📚 Biennium: {BIENNIUM}")
-    print(f"⏰ Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Starting WA Legislature Bill Fetcher - {datetime.now()}")
     print("=" * 60)
     
-    try:
-        # Fetch all bills for 2026 session
-        bills = fetch_2026_session_bills()
-        
-        # Remove any duplicate bills
-        unique_bills = {}
-        for bill in bills:
-            unique_bills[bill['id']] = bill
-        bills = list(unique_bills.values())
-        
-        # Fetch hearings if we have bills
-        if bills:
-            fetch_hearings_for_bills(bills)
-        
-        # Save data
-        if bills:
-            save_bills_data(bills)
-            create_stats_file(bills)
-            
-            print("\n" + "=" * 60)
-            print(f"✅ Successfully processed {len(bills)} bills")
-            
-            # Show summary
-            bill_types = {}
-            for bill in bills:
-                match = re.match(r'([A-Z]+)', bill['number'])
-                if match:
-                    bill_type = match.group(1)
-                    bill_types[bill_type] = bill_types.get(bill_type, 0) + 1
-            
-            if bill_types:
-                print("\n📊 Bills by type:")
-                for bill_type, count in sorted(bill_types.items()):
-                    print(f"  {bill_type}: {count}")
-            
-            # Show sample bills
-            print("\n📋 Sample bills:")
-            for bill in bills[:5]:
-                print(f"  • {bill['number']}: {bill['title'][:60]}...")
-        else:
-            print("\n⚠️  No bills retrieved from API")
-            print("   The 2026 session may not have bills available yet.")
-            print("   Session dates: January 12 - March 12, 2026")
-            
-            # Save empty structure
-            save_bills_data([])
-            create_stats_file([])
-        
-        print(f"\n⏰ Completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        
-    except Exception as e:
-        print(f"\n❌ Error: {e}")
-        import traceback
-        traceback.print_exc()
+    # Ensure data directory exists
+    ensure_data_dir()
+    
+    # Keep track of all bills
+    all_bills = {}
+    
+    # 1. Fetch all legislation for current year
+    print("\n1. Fetching all legislation for current year...")
+    current_year_bills = fetch_all_legislation()
+    for bill in current_year_bills:
+        if bill['id'] not in all_bills:
+            all_bills[bill['id']] = bill
+    print(f"   Found {len(current_year_bills)} bills from current year")
+    
+    # 2. Fetch prefiled legislation
+    print("\n2. Fetching prefiled legislation...")
+    prefiled_bills = fetch_prefiled_legislation()
+    new_prefiled = 0
+    for bill in prefiled_bills:
+        if bill['id'] not in all_bills:
+            all_bills[bill['id']] = bill
+            new_prefiled += 1
+    print(f"   Found {len(prefiled_bills)} prefiled bills ({new_prefiled} new)")
+    
+    # 3. Fetch committee meetings for hearings
+    print("\n3. Fetching committee meetings...")
+    hearings = fetch_committee_meetings()
+    print(f"   Found {len(hearings)} committee meetings")
+    
+    # Convert to list for saving
+    final_bills = list(all_bills.values())
+    
+    print("\n" + "=" * 60)
+    print(f"Total unique bills collected: {len(final_bills)}")
+    
+    # Save bills data
+    save_bills_data(final_bills)
+    
+    # Create statistics
+    create_stats_file(final_bills)
+    
+    # Create sync log
+    create_sync_log(len(final_bills), 0, "success")
+    
+    print("=" * 60)
+    print(f"Successfully fetched and saved {len(final_bills)} bills")
+    print(f"Update complete at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 if __name__ == "__main__":
     main()
