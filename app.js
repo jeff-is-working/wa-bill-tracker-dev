@@ -152,15 +152,25 @@ const StorageManager = {
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('App initializing...');
     initializeUser();
     StorageManager.load();
     await loadBillsData();
     setupEventListeners();
     setupAutoSave();
     setupNavigationListeners();
+    
+    // Ensure we have a valid bill type set
+    if (!APP_STATE.currentBillType) {
+        console.log('No currentBillType set, defaulting to all');
+        APP_STATE.currentBillType = 'all';
+    }
+    
     handleHashChange(); // Handle initial hash
     updateUI();
     checkForSharedBill();
+    
+    console.log('App initialized with currentBillType:', APP_STATE.currentBillType);
 });
 
 // User Initialization
@@ -228,8 +238,12 @@ function handleHashChange() {
 
 // Navigate to a specific bill type
 function navigateToBillType(type) {
+    console.log('navigateToBillType called with:', type);
+    
     // Normalize the type - convert to uppercase except for 'all'
     const normalizedType = type.toLowerCase() === 'all' ? 'all' : type.toUpperCase();
+    
+    console.log('Normalized type:', normalizedType);
     
     // Validate the type exists in config
     if (!APP_CONFIG.billTypes[normalizedType]) {
@@ -239,6 +253,7 @@ function navigateToBillType(type) {
         type = normalizedType;
     }
     
+    console.log('Setting currentBillType to:', type);
     APP_STATE.currentBillType = type;
     
     // Update active nav tab
@@ -270,6 +285,7 @@ function navigateToBillType(type) {
     
     // Save state and update UI
     StorageManager.save();
+    console.log('About to call updateUI');
     updateUI();
 }
 
@@ -396,12 +412,21 @@ function createBillCard(bill) {
 function filterBills() {
     let filtered = [...APP_STATE.bills];
     
+    console.log('filterBills called:', {
+        currentBillType: APP_STATE.currentBillType,
+        totalBills: APP_STATE.bills.length
+    });
+    
     // Filter by current bill type page
     if (APP_STATE.currentBillType && APP_STATE.currentBillType.toLowerCase() !== 'all') {
+        console.log('Filtering by type:', APP_STATE.currentBillType);
         filtered = filtered.filter(bill => {
             const billType = bill.number.split(' ')[0];
             return billType.toUpperCase() === APP_STATE.currentBillType.toUpperCase();
         });
+        console.log('After type filter:', filtered.length);
+    } else {
+        console.log('Not filtering by type (showing all)');
     }
     
     if (APP_STATE.filters.search) {
