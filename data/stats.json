@@ -1,15 +1,63 @@
 {
-  "generated": "2026-01-15T02:04:08.498756",
-  "totalBills": 0,
-  "byStatus": {},
-  "byCommittee": {},
-  "byPriority": {},
-  "byTopic": {},
-  "bySponsor": {},
-  "byType": {},
-  "recentlyUpdated": 0,
-  "updatedToday": 0,
+  "generated": "2026-01-17T03:38:55.184034",
+  "totalBills": 2945,
+  "byStatus": {
+    "prefiled": 2001,
+    "committee": 927,
+    "introduced": 17
+  },
+  "byCommittee": {
+    "Unassigned": 2945
+  },
+  "byPriority": {
+    "medium": 2945
+  },
+  "byTopic": {
+    "Technology": 2945
+  },
+  "bySponsor": {
+    "House Member": 1547,
+    "Senator": 1398
+  },
+  "byType": {
+    "2SHB": 26,
+    "2SSB": 9,
+    "E2SHB": 3,
+    "E2SSB": 5,
+    "EHB": 3,
+    "ESB": 7,
+    "ESHB": 14,
+    "ESSB": 16,
+    "HB": 1282,
+    "HCR": 5,
+    "HJM": 10,
+    "HJR": 13,
+    "HR": 3,
+    "SB": 952,
+    "SCR": 5,
+    "SGA": 225,
+    "SHB": 185,
+    "SHCR": 1,
+    "SHJM": 2,
+    "SJM": 11,
+    "SJR": 7,
+    "SR": 3,
+    "SSB": 155,
+    "SSJM": 2,
+    "SSJR": 1
+  },
+  "recentlyUpdated": 2945,
+  "updatedToday": 2945,
   "upcomingHearings": 0,
   "billsWithHearings": 0,
-  "topSponsors": []
+  "topSponsors": [
+    [
+      "House Member",
+      1547
+    ],
+    [
+      "Senator",
+      1398
+    ]
+  ]
 }
