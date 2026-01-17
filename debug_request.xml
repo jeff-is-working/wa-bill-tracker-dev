@@ -4,10 +4,9 @@
                xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
     
-    <GetLegislativeStatusChanges xmlns="http://WSLWebServices.leg.wa.gov/">
+    <GetLegislationByRequestNumber xmlns="http://WSLWebServices.leg.wa.gov/">
       <biennium>2025-26</biennium>
-      <beginDate>2025-12-01T00:00:00</beginDate>
-      <endDate>2026-01-17T02:33:42.393623</endDate>
-    </GetLegislativeStatusChanges>
+      <requestNumber>26-0001</requestNumber>
+    </GetLegislationByRequestNumber>
   </soap:Body>
 </soap:Envelope>
