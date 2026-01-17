@@ -1,6 +1,14 @@
 {
   "logs": [
     {
+      "timestamp": "2026-01-17T22:25:46.386917",
+      "status": "success",
+      "billsCount": 2945,
+      "meetingsCount": 0,
+      "newBillsAdded": 383,
+      "nextSync": "2026-01-18T04:25:46.386920"
+    },
+    {
       "timestamp": "2026-01-17T20:45:58.447346",
       "status": "success",
       "billsCount": 3261,
