@@ -1,37 +1,37 @@
 {
-  "generated": "2026-01-19T04:12:10.577146",
-  "totalBills": 3261,
+  "generated": "2026-01-19T14:38:12.682523",
+  "totalBills": 3307,
   "byStatus": {
     "prefiled": 2253,
     "committee": 83,
-    "enacted": 46,
-    "introduced": 879
+    "enacted": 47,
+    "introduced": 924
   },
   "byCommittee": {
-    "Unassigned": 3261
+    "Unassigned": 3307
   },
   "byPriority": {
-    "medium": 3108,
-    "high": 118,
-    "low": 35
+    "medium": 3151,
+    "high": 119,
+    "low": 37
   },
   "byTopic": {
-    "General Government": 1961,
-    "Public Safety": 125,
-    "Housing": 103,
-    "Tax & Revenue": 240,
-    "Transportation": 106,
-    "Healthcare": 169,
-    "Education": 221,
-    "Social Services": 91,
-    "Environment": 87,
-    "Business": 90,
-    "Technology": 41,
+    "General Government": 1982,
+    "Public Safety": 126,
+    "Housing": 105,
+    "Tax & Revenue": 241,
+    "Transportation": 107,
+    "Healthcare": 178,
+    "Education": 224,
+    "Social Services": 95,
+    "Environment": 89,
+    "Business": 91,
+    "Technology": 42,
     "Agriculture": 27
   },
   "bySponsor": {
     "(Walsh)": 19,
-    "(Abbarno)": 16,
+    "(Abbarno)": 17,
     "(Leavitt)": 30,
     "(Ryu)": 13,
     "(Low)": 28,
@@ -39,13 +39,13 @@
     "(Taylor)": 15,
     "(Schmidt)": 20,
     "LG(Duerr)": 4,
-    "(Shavers)": 20,
+    "(Shavers)": 21,
     "HOUS(Connors)": 1,
     "APP(Ryu)": 1,
     "CB(Kloba)": 1,
     "(Goodman)": 6,
-    "(Reeves)": 35,
-    "(Stonier)": 15,
+    "(Reeves)": 37,
+    "(Stonier)": 16,
     "(Couture)": 32,
     "(Ortiz-Self)": 10,
     "PEW(Ortiz-Self)": 1,
@@ -60,13 +60,13 @@
     "TEDV(Barnard)": 1,
     "(Barkis)": 14,
     "(Alvarado)": 22,
-    "(Santos)": 12,
+    "(Santos)": 13,
     "TR(Low)": 3,
     "CPB(Reeves)": 3,
     "(Fosse)": 8,
     "LAWS(Davis)": 1,
     "ENVI(Fey)": 2,
-    "(Walen)": 18,
+    "(Walen)": 19,
     "HCW(Walen)": 1,
     "ED(Ortiz-Self)": 2,
     "CPB(Donaghy)": 2,
@@ -80,7 +80,7 @@
     "CPB(Waters)": 1,
     "APP(Fosse)": 1,
     "(Barnard)": 16,
-    "(Mena)": 13,
+    "(Mena)": 14,
     "APP(Klicker)": 3,
     "CS(Ortiz-Self)": 1,
     "CS(Farivar)": 3,
@@ -109,7 +109,7 @@
     "CS(Hackney)": 1,
     "APP(Berry)": 3,
     "(Steele)": 10,
-    "(Duerr)": 11,
+    "(Duerr)": 12,
     "APP(Duerr)": 3,
     "LAWS(Berry)": 1,
     "LG(Walen)": 2,
@@ -141,7 +141,7 @@
     "LG(Alvarado)": 1,
     "(Thai)": 28,
     "APP(Farivar)": 1,
-    "(Stearns)": 12,
+    "(Stearns)": 13,
     "(Fey)": 12,
     "TR(Fey)": 6,
     "(Hackney)": 12,
@@ -150,13 +150,13 @@
     "(Klicker)": 8,
     "(Fitzgibbon)": 26,
     "HCW(Low)": 1,
-    "(Pollet)": 20,
+    "(Pollet)": 21,
     "ELHS(Simmons)": 1,
     "TR(Wylie)": 1,
     "ELHS(Couture)": 1,
     "CS(Davis)": 1,
     "ENVI(Ybarra)": 1,
-    "(Hill)": 8,
+    "(Hill)": 9,
     "ED(Pollet)": 1,
     "FIN(Ormsby)": 1,
     "FIN(Low)": 1,
@@ -178,19 +178,19 @@
     "ENVI(Cortes)": 1,
     "LG(Donaghy)": 1,
     "(Reed)": 20,
-    "(Valdez)": 24,
+    "(Valdez)": 25,
     "LAWS(Reed)": 1,
     "APP(McEntire)": 1,
     "(Engell)": 9,
     "LAWS(Scott)": 2,
     "(Callan)": 14,
     "APP(Hackney)": 1,
-    "(Street)": 12,
+    "(Street)": 13,
     "SGOV(Mena)": 1,
     "AGNR(Goodman)": 1,
     "(Schmick)": 8,
     "(Hunt)": 10,
-    "(Lekanoff)": 14,
+    "(Lekanoff)": 16,
     "LAWS(Obras)": 1,
     "(Richards)": 17,
     "PEW(Pollet)": 3,
@@ -217,12 +217,12 @@
     "APP(Barnard)": 1,
     "APP(Fitzgibbon)": 3,
     "ED(Connors)": 1,
-    "(Macri)": 15,
+    "(Macri)": 16,
     "TR(Timmons)": 1,
     "ENVI(Reeves)": 1,
     "TR(Donaghy)": 4,
     "(Obras)": 12,
-    "(Davis)": 10,
+    "(Davis)": 11,
     "APP(Davis)": 3,
     "HCW(Simmons)": 2,
     "SGOV(Salahuddin)": 2,
@@ -230,7 +230,7 @@
     "TEDV(Walen)": 1,
     "TR(Bernbaum)": 2,
     "TR(Goodman)": 1,
-    "(Parshley)": 30,
+    "(Parshley)": 31,
     "CPB(Kloba)": 1,
     "ED(Santos)": 1,
     "CB(Duerr)": 1,
@@ -271,7 +271,7 @@
     "(Ley)": 6,
     "LG(Hunt)": 1,
     "APP(Bernbaum)": 1,
-    "(Penner)": 9,
+    "(Penner)": 10,
     "PEW(Paul)": 1,
     "(Dufault)": 29,
     "(Nance)": 5,
@@ -289,7 +289,7 @@
     "(Springer)": 12,
     "TEDV(Stuebe)": 1,
     "ED(Thai)": 1,
-    "(Zahn)": 22,
+    "(Zahn)": 24,
     "ENVI(Abbarno)": 1,
     "APP(Santos)": 1,
     "ENVI(Hunt)": 1,
@@ -314,7 +314,7 @@
     "CRJ(Thomas)": 1,
     "CS(Lekanoff)": 2,
     "ENVI(Dye)": 1,
-    "(Chase)": 12,
+    "(Chase)": 13,
     "SGOV(Hill)": 1,
     "AGNR(Parshley)": 1,
     "(Keaton)": 8,
@@ -327,7 +327,7 @@
     "APP(Richards)": 2,
     "FIN(Paul)": 1,
     "CPB(Griffey)": 1,
-    "(Burnett)": 6,
+    "(Burnett)": 7,
     "FIN(Tharinger)": 1,
     "HOUS(Zahn)": 2,
     "HCW(Salahuddin)": 1,
@@ -363,24 +363,25 @@
     "TR(Zahn)": 1,
     "APP(Abbarno)": 1,
     "FIN(Farivar)": 1,
-    "(Ybarra)": 4,
+    "(Ybarra)": 5,
     "APP(Entenman)": 1,
     "APP(Rule)": 1,
     "FIN(Fitzgibbon)": 2,
     "SGOV(Fitzgibbon)": 1,
     "CRJ(Abell)": 1,
     "CRJ(Thai)": 1,
-    "(Hall)": 6,
-    "(Wilson, J.)": 28,
+    "(Hall)": 7,
+    "(Stokesbary)": 1,
+    "(Wilson, J.)": 30,
     "(Fortunato)": 44,
     "(Torres)": 20,
     "EDU(Torres)": 1,
     "HS(Salda\u00f1a)": 1,
     "(Pedersen)": 9,
-    "(Braun)": 29,
+    "(Braun)": 31,
     "EDU(Braun)": 1,
     "SGTE(Boehnke)": 1,
-    "(Boehnke)": 42,
+    "(Boehnke)": 43,
     "(Lovick)": 32,
     "SGTE(Nobles)": 2,
     "HLTC(Chapman)": 2,
@@ -388,7 +389,7 @@
     "LC(Salda\u00f1a)": 4,
     "(Warnick)": 17,
     "EDU(Lovick)": 1,
-    "(King)": 24,
+    "(King)": 25,
     "HEWD(Torres)": 1,
     "HS(Wilson, C.)": 10,
     "EDU(Wilson, C.)": 2,
@@ -396,7 +397,7 @@
     "ENET(Wilson, J.)": 1,
     "(Chapman)": 15,
     "(Holy)": 6,
-    "(Dhingra)": 18,
+    "(Dhingra)": 21,
     "(Conway)": 12,
     "LC(Stanford)": 4,
     "LC(Riccelli)": 1,
@@ -414,7 +415,7 @@
     "HLTC(Liias)": 1,
     "LAW(Hansen)": 1,
     "LAW(Lovick)": 3,
-    "(Salda\u00f1a)": 29,
+    "(Salda\u00f1a)": 30,
     "LAW(Braun)": 1,
     "ANR(Boehnke)": 1,
     "HLTC(Muzzall)": 2,
@@ -434,9 +435,9 @@
     "HLTC(Bateman)": 2,
     "(Christian)": 22,
     "HLTC(Valdez)": 1,
-    "(Nobles)": 28,
+    "(Nobles)": 29,
     "HLTC(Frame)": 1,
-    "(Trudeau)": 12,
+    "(Trudeau)": 13,
     "EDU(Nobles)": 1,
     "TRAN(Lovick)": 1,
     "HSG(Pedersen)": 2,
@@ -452,13 +453,13 @@
     "LGV(Salomon)": 4,
     "HSG(Salomon)": 3,
     "ANR(Salomon)": 1,
-    "(Shewmake)": 22,
+    "(Shewmake)": 23,
     "TRAN(Liias)": 6,
     "HS(Orwall)": 1,
     "HEWD(Nobles)": 3,
     "ANR(Short)": 3,
     "LAW(Nobles)": 1,
-    "(Short)": 15,
+    "(Short)": 16,
     "ENET(Shewmake)": 4,
     "WM(Shewmake)": 4,
     "SGTE(Valdez)": 2,
@@ -466,7 +467,7 @@
     "HS(Nobles)": 1,
     "HSG(Bateman)": 1,
     "WM(Krishnadasan)": 1,
-    "(Wellman)": 30,
+    "(Wellman)": 31,
     "EDU(Wellman)": 4,
     "LC(Conway)": 3,
     "WM(Nobles)": 2,
@@ -486,7 +487,7 @@
     "HSG(Trudeau)": 1,
     "SGTE(MacEwen)": 1,
     "HLTC(Nobles)": 1,
-    "(Riccelli)": 37,
+    "(Riccelli)": 38,
     "LAW(Wagoner)": 3,
     "HS(Hansen)": 1,
     "ENET(Slatter)": 2,
@@ -513,7 +514,7 @@
     "LGV(Stanford)": 1,
     "LGV(Braun)": 1,
     "ANR(Warnick)": 2,
-    "(Hansen)": 13,
+    "(Hansen)": 14,
     "WM(Stanford)": 3,
     "WM(Harris)": 1,
     "ANR(Chapman)": 2,
@@ -537,12 +538,12 @@
     "(Lovelett)": 14,
     "(Dozier)": 10,
     "LC(Liias)": 3,
-    "(Slatter)": 22,
+    "(Slatter)": 23,
     "HEWD(Hansen)": 1,
     "TRAN(Braun)": 1,
     "EDU(Robinson)": 1,
     "LC(Bateman)": 1,
-    "(Harris)": 16,
+    "(Harris)": 17,
     "ENET(Chapman)": 1,
     "WM(Schoesler)": 1,
     "LC(Ramos)": 2,
@@ -597,9 +598,9 @@
     "()": 313
   },
   "byType": {
-    "HB": 1551,
-    "SB": 1204,
-    "JM": 27,
+    "HB": 1577,
+    "SB": 1222,
+    "JM": 29,
     "JR": 21,
     "CR": 17,
     "HR": 67,
@@ -607,15 +608,15 @@
     "GA": 313
   },
   "byAgency": {
-    "House": 1584,
-    "Senate": 1236,
+    "House": 1611,
+    "Senate": 1255,
     "HR": 66,
     "EHR": 1,
     "SR": 61,
     "SGA": 313
   },
-  "recentlyUpdated": 3261,
-  "updatedToday": 3261,
+  "recentlyUpdated": 3307,
+  "updatedToday": 3307,
   "topSponsors": [
     [
       "()",
@@ -627,15 +628,15 @@
     ],
     [
       "(Boehnke)",
-      42
+      43
     ],
     [
       "(Riccelli)",
-      37
+      38
     ],
     [
       "(Reeves)",
-      35
+      37
     ],
     [
       "(Cortes)",
@@ -650,6 +651,14 @@
       32
     ],
     [
+      "(Parshley)",
+      31
+    ],
+    [
+      "(Braun)",
+      31
+    ],
+    [
       "(Liias)",
       31
     ],
@@ -658,11 +667,15 @@
       31
     ],
     [
+      "(Wellman)",
+      31
+    ],
+    [
       "(Leavitt)",
       30
     ],
     [
-      "(Parshley)",
+      "(Wilson, J.)",
       30
     ],
     [
@@ -670,7 +683,7 @@
       30
     ],
     [
-      "(Wellman)",
+      "(Salda\u00f1a)",
       30
     ],
     [
@@ -678,24 +691,12 @@
       29
     ],
     [
-      "(Braun)",
-      29
-    ],
-    [
-      "(Salda\u00f1a)",
-      29
-    ],
-    [
       "(Hasegawa)",
       29
     ],
     [
-      "(Low)",
-      28
-    ],
-    [
-      "(Thai)",
-      28
+      "(Nobles)",
+      29
     ]
   ]
 }
