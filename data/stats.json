@@ -1,22 +1,22 @@
 {
-  "generated": "2026-01-19T14:38:12.682523",
-  "totalBills": 3307,
+  "generated": "2026-01-20T04:03:57.512335",
+  "totalBills": 3309,
   "byStatus": {
-    "prefiled": 2253,
-    "committee": 83,
+    "prefiled": 2246,
+    "committee": 92,
     "enacted": 47,
     "introduced": 924
   },
   "byCommittee": {
-    "Unassigned": 3307
+    "Unassigned": 3309
   },
   "byPriority": {
-    "medium": 3151,
+    "medium": 3153,
     "high": 119,
     "low": 37
   },
   "byTopic": {
-    "General Government": 1982,
+    "General Government": 1984,
     "Public Safety": 126,
     "Housing": 105,
     "Tax & Revenue": 241,
@@ -435,7 +435,7 @@
     "HLTC(Bateman)": 2,
     "(Christian)": 22,
     "HLTC(Valdez)": 1,
-    "(Nobles)": 29,
+    "(Nobles)": 30,
     "HLTC(Frame)": 1,
     "(Trudeau)": 13,
     "EDU(Nobles)": 1,
@@ -592,7 +592,7 @@
     "HSG(Orwall)": 1,
     "TR(Gregerson)": 1,
     "SGOV(Tharinger)": 1,
-    "(Jinkins)": 9,
+    "(Jinkins)": 10,
     "(Corry)": 1,
     "TRAN(Torres)": 1,
     "()": 313
@@ -603,20 +603,20 @@
     "JM": 29,
     "JR": 21,
     "CR": 17,
-    "HR": 67,
-    "SR": 61,
+    "HR": 68,
+    "SR": 62,
     "GA": 313
   },
   "byAgency": {
     "House": 1611,
     "Senate": 1255,
-    "HR": 66,
+    "HR": 67,
     "EHR": 1,
-    "SR": 61,
+    "SR": 62,
     "SGA": 313
   },
-  "recentlyUpdated": 3307,
-  "updatedToday": 3307,
+  "recentlyUpdated": 3309,
+  "updatedToday": 3309,
   "topSponsors": [
     [
       "()",
@@ -687,15 +687,15 @@
       30
     ],
     [
+      "(Nobles)",
+      30
+    ],
+    [
       "(Dufault)",
       29
     ],
     [
       "(Hasegawa)",
-      29
-    ],
-    [
-      "(Nobles)",
       29
     ]
   ]
