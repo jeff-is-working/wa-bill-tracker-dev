@@ -164,6 +164,20 @@ function migrateFiltersToArrays() {
     });
 }
 
+// Sync filter tag UI (active class) with loaded APP_STATE.filters
+function syncFilterTagUI() {
+    document.querySelectorAll('.filter-tag').forEach(tag => {
+        const filter = tag.dataset.filter;
+        const value = tag.dataset.value;
+        const filterVal = APP_STATE.filters[filter];
+        if (Array.isArray(filterVal) && filterVal.includes(value)) {
+            tag.classList.add('active');
+        } else {
+            tag.classList.remove('active');
+        }
+    });
+}
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('App initializing...');
@@ -171,9 +185,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     StorageManager.load();
     await loadBillsData();
     setupEventListeners();
+    syncFilterTagUI(); // Restore active state on filter tags from saved filters
     setupAutoSave();
     setupNavigationListeners();
-    
+
     // Ensure we have a valid bill type set
     if (!APP_STATE.currentBillType) {
         APP_STATE.currentBillType = 'all';
@@ -599,12 +614,14 @@ function filterBills() {
         // Expand selected filters to also match related statuses
         // (handles backward compatibility and logical grouping)
         const statusAliases = {
+            'prefiled':      ['prefiled'],
+            'introduced':    ['introduced'],
             'committee':     ['committee', 'opposite_committee'],
             'floor':         ['floor', 'opposite_floor'],
             'passed_origin': ['passed_origin', 'passed', 'passed_legislature'],
             'passed':        ['passed', 'passed_origin', 'passed_legislature'],
-            'enacted':       ['enacted'],
             'governor':      ['governor'],
+            'enacted':       ['enacted'],
             'vetoed':        ['vetoed'],
             'failed':        ['failed']
         };
