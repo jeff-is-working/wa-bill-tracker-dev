@@ -30,9 +30,9 @@ const APP_STATE = {
     userNotes: {},
     filters: {
         search: '',
-        status: '',
-        priority: '',
-        committee: '',
+        status: [],
+        priority: [],
+        committee: [],
         type: '',
         trackedOnly: false
     },
@@ -124,9 +124,10 @@ const StorageManager = {
                 APP_STATE.userData = userFromCookie || APP_STATE.userData;
                 APP_STATE.filters = filtersFromCookie || APP_STATE.filters;
                 APP_STATE.currentBillType = billTypeFromCookie || 'all';
+                migrateFiltersToArrays();
                 return true;
             }
-            
+
             // Fallback to localStorage
             const saved = localStorage.getItem('wa_tracker_state');
             if (saved) {
@@ -136,7 +137,8 @@ const StorageManager = {
                 APP_STATE.userData = data.userData || APP_STATE.userData;
                 APP_STATE.filters = data.filters || APP_STATE.filters;
                 APP_STATE.currentBillType = data.currentBillType || 'all';
-                
+                migrateFiltersToArrays();
+
                 // Migrate to cookies
                 StorageManager.save();
                 return true;
@@ -149,6 +151,18 @@ const StorageManager = {
         }
     }
 };
+
+// Migrate old single-string filter values to arrays
+function migrateFiltersToArrays() {
+    ['status', 'priority', 'committee'].forEach(key => {
+        const val = APP_STATE.filters[key];
+        if (typeof val === 'string') {
+            APP_STATE.filters[key] = val ? [val] : [];
+        } else if (!Array.isArray(val)) {
+            APP_STATE.filters[key] = [];
+        }
+    });
+}
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
@@ -450,20 +464,20 @@ function filterBills() {
         );
     }
     
-    if (APP_STATE.filters.status) {
-        filtered = filtered.filter(bill => bill.status === APP_STATE.filters.status);
+    if (APP_STATE.filters.status && APP_STATE.filters.status.length > 0) {
+        filtered = filtered.filter(bill => APP_STATE.filters.status.includes(bill.status));
     }
-    
-    if (APP_STATE.filters.priority) {
-        filtered = filtered.filter(bill => bill.priority === APP_STATE.filters.priority);
+
+    if (APP_STATE.filters.priority && APP_STATE.filters.priority.length > 0) {
+        filtered = filtered.filter(bill => APP_STATE.filters.priority.includes(bill.priority));
     }
-    
-    if (APP_STATE.filters.committee) {
-        filtered = filtered.filter(bill => 
-            bill.committee.toLowerCase().includes(APP_STATE.filters.committee)
+
+    if (APP_STATE.filters.committee && APP_STATE.filters.committee.length > 0) {
+        filtered = filtered.filter(bill =>
+            APP_STATE.filters.committee.some(c => bill.committee.toLowerCase().includes(c))
         );
     }
-    
+
     if (APP_STATE.filters.type) {
         filtered = filtered.filter(bill => {
             const billType = bill.number.split(' ')[0];
@@ -580,9 +594,9 @@ function highlightBill(billId) {
     // Reset filters
     APP_STATE.filters = {
         search: '',
-        status: '',
-        priority: '',
-        committee: '',
+        status: [],
+        priority: [],
+        committee: [],
         type: '',
         trackedOnly: false
     };
@@ -895,15 +909,16 @@ function setupEventListeners() {
             const filter = tag.dataset.filter;
             const value = tag.dataset.value;
 
+            // Toggle this tag on or off (multi-select)
             if (tag.classList.contains('active')) {
                 tag.classList.remove('active');
-                APP_STATE.filters[filter] = '';
+                APP_STATE.filters[filter] = APP_STATE.filters[filter].filter(v => v !== value);
             } else {
-                tag.parentElement.querySelectorAll('.filter-tag').forEach(t =>
-                    t.classList.remove('active')
-                );
                 tag.classList.add('active');
-                APP_STATE.filters[filter] = value;
+                if (!Array.isArray(APP_STATE.filters[filter])) {
+                    APP_STATE.filters[filter] = [];
+                }
+                APP_STATE.filters[filter].push(value);
             }
 
             updateUI();
