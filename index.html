@@ -15,7 +15,8 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=optional" rel="stylesheet">
     
     <style>
         :root {
@@ -487,6 +488,44 @@
         .pagination-controls .page-info {
             color: var(--text-muted);
             font-size: 0.9rem;
+        }
+
+        /* Skeleton Loading */
+        .skeleton-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-height: 200px;
+        }
+
+        .skeleton-line {
+            background: linear-gradient(
+                90deg,
+                var(--border) 25%,
+                rgba(255, 255, 255, 0.05) 50%,
+                var(--border) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s ease-in-out infinite;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+        }
+
+        .skeleton-title { height: 1.25rem; width: 40%; }
+        .skeleton-short { height: 0.875rem; width: 25%; }
+        .skeleton-long { height: 0.875rem; width: 90%; }
+        .skeleton-medium { height: 0.875rem; width: 60%; margin-bottom: 0; }
+
+        @keyframes skeleton-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .skeleton-line {
+                animation: none;
+            }
         }
 
         /* Bills Grid */
@@ -1334,7 +1373,24 @@
 
             <!-- Bills Grid -->
             <div class="bills-grid" id="billsGrid">
-                <!-- Bills will be dynamically inserted here -->
+                <div class="skeleton-card" aria-hidden="true">
+                    <div class="skeleton-line skeleton-title"></div>
+                    <div class="skeleton-line skeleton-short"></div>
+                    <div class="skeleton-line skeleton-long"></div>
+                    <div class="skeleton-line skeleton-medium"></div>
+                </div>
+                <div class="skeleton-card" aria-hidden="true">
+                    <div class="skeleton-line skeleton-title"></div>
+                    <div class="skeleton-line skeleton-short"></div>
+                    <div class="skeleton-line skeleton-long"></div>
+                    <div class="skeleton-line skeleton-medium"></div>
+                </div>
+                <div class="skeleton-card" aria-hidden="true">
+                    <div class="skeleton-line skeleton-title"></div>
+                    <div class="skeleton-line skeleton-short"></div>
+                    <div class="skeleton-line skeleton-long"></div>
+                    <div class="skeleton-line skeleton-medium"></div>
+                </div>
             </div>
             <div id="paginationControls" class="pagination-controls"></div>
         </div>
@@ -1404,6 +1460,6 @@
     <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
 
-    <script src="app.js"></script>
+    <script src="app.js" defer></script>
 </body>
 </html>
