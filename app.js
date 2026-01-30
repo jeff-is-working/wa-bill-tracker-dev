@@ -1183,6 +1183,23 @@ function setupEventListeners() {
             case 'share': shareBill(billId); break;
         }
     });
+
+    // Mobile user panel toggle
+    const panel = document.getElementById('userPanel');
+    const avatar = document.getElementById('userAvatar');
+
+    avatar.addEventListener('click', (e) => {
+        if (window.innerWidth > 768) return;
+        e.stopPropagation();
+        panel.classList.toggle('mobile-expanded');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth > 768) return;
+        if (!panel.contains(e.target)) {
+            panel.classList.remove('mobile-expanded');
+        }
+    });
 }
 
 // Auto-save functionality
