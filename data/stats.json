@@ -1,34 +1,34 @@
 {
-  "generated": "2026-01-30T07:17:29.806868",
-  "totalBills": 3577,
+  "generated": "2026-01-30T14:49:55.538178",
+  "totalBills": 3588,
   "byStatus": {
     "prefiled": 1979,
     "floor": 103,
     "enacted": 285,
-    "committee": 1191,
-    "passed_origin": 16,
+    "committee": 1209,
+    "passed_origin": 9,
     "introduced": 3
   },
   "byCommittee": {
-    "Unassigned": 3577
+    "Unassigned": 3588
   },
   "byPriority": {
-    "medium": 3413,
+    "medium": 3424,
     "high": 124,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2142,
+    "General Government": 2150,
     "Public Safety": 129,
     "Housing": 111,
-    "Tax & Revenue": 264,
+    "Tax & Revenue": 265,
     "Transportation": 118,
     "Healthcare": 189,
-    "Education": 250,
+    "Education": 251,
     "Social Services": 104,
     "Environment": 92,
     "Business": 96,
-    "Technology": 50,
+    "Technology": 51,
     "Agriculture": 32
   },
   "bySponsor": {
@@ -175,7 +175,7 @@
     "HCW(Rule)": 2,
     "APP(Dent)": 3,
     "ED(Stonier)": 1,
-    "(Berg)": 17,
+    "(Berg)": 19,
     "(Donaghy)": 16,
     "ENVI(Cortes)": 1,
     "LG(Donaghy)": 1,
@@ -240,7 +240,7 @@
     "(Cortes)": 30,
     "(Ramel)": 8,
     "TEDV(Gregerson)": 2,
-    "(Salahuddin)": 17,
+    "(Salahuddin)": 18,
     "PEW(Salahuddin)": 1,
     "FIN(Berg)": 2,
     "ELHS(Obras)": 1,
@@ -270,7 +270,7 @@
     "ENVI(Street)": 2,
     "(Entenman)": 6,
     "PEW(Reed)": 1,
-    "(Ley)": 11,
+    "(Ley)": 12,
     "LG(Hunt)": 1,
     "APP(Bernbaum)": 1,
     "(Penner)": 9,
@@ -407,11 +407,11 @@
     "(Stokesbary)": 1,
     "(Wilson, J.)": 30,
     "(Fortunato)": 47,
-    "(Torres)": 25,
+    "(Torres)": 30,
     "EDU(Torres)": 1,
     "HS(Salda\u00f1a)": 2,
     "(Pedersen)": 7,
-    "(Braun)": 36,
+    "(Braun)": 37,
     "EDU(Braun)": 1,
     "SGTE(Boehnke)": 1,
     "(Boehnke)": 47,
@@ -475,7 +475,7 @@
     "TRAN(Lovick)": 1,
     "HSG(Pedersen)": 2,
     "LAW(Wilson, C.)": 1,
-    "(McCune)": 14,
+    "(McCune)": 15,
     "LAW(Hasegawa)": 1,
     "SGTE(Gildon)": 2,
     "(Gildon)": 30,
@@ -655,8 +655,8 @@
     "()": 321
   },
   "byType": {
-    "HB": 1706,
-    "SB": 1336,
+    "HB": 1710,
+    "SB": 1343,
     "6-": 2,
     "JM": 31,
     "JR": 24,
@@ -666,16 +666,16 @@
     "GA": 321
   },
   "byAgency": {
-    "House": 1742,
-    "Senate": 1372,
+    "House": 1746,
+    "Senate": 1379,
     "SI IL26-": 2,
     "HR": 71,
     "EHR": 1,
     "SR": 68,
     "SGA": 321
   },
-  "recentlyUpdated": 3577,
-  "updatedToday": 3577,
+  "recentlyUpdated": 3588,
+  "updatedToday": 3588,
   "topSponsors": [
     [
       "()",
@@ -698,15 +698,15 @@
       39
     ],
     [
+      "(Braun)",
+      37
+    ],
+    [
       "(Riccelli)",
       37
     ],
     [
       "(Couture)",
-      36
-    ],
-    [
-      "(Braun)",
       36
     ],
     [
@@ -746,15 +746,15 @@
       30
     ],
     [
+      "(Torres)",
+      30
+    ],
+    [
       "(Gildon)",
       30
     ],
     [
       "(Wagoner)",
-      29
-    ],
-    [
-      "(Salda\u00f1a)",
       29
     ]
   ]
