@@ -1,33 +1,33 @@
 {
-  "generated": "2026-02-04T04:28:38.154025",
-  "totalBills": 3610,
+  "generated": "2026-02-04T15:10:50.983106",
+  "totalBills": 3624,
   "byStatus": {
     "prefiled": 2025,
     "floor": 146,
     "enacted": 285,
-    "committee": 1135,
+    "committee": 1149,
     "passed_origin": 13,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3610
+    "Unassigned": 3624
   },
   "byPriority": {
-    "medium": 3446,
+    "medium": 3460,
     "high": 124,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2161,
+    "General Government": 2163,
     "Public Safety": 129,
     "Housing": 111,
-    "Tax & Revenue": 268,
-    "Transportation": 121,
+    "Tax & Revenue": 275,
+    "Transportation": 123,
     "Healthcare": 190,
-    "Education": 254,
+    "Education": 256,
     "Social Services": 104,
     "Environment": 92,
-    "Business": 96,
+    "Business": 97,
     "Technology": 51,
     "Agriculture": 33
   },
@@ -38,7 +38,7 @@
     "(Ryu)": 13,
     "(Low)": 26,
     "(Jacobsen)": 9,
-    "(Taylor)": 13,
+    "(Taylor)": 14,
     "(Schmidt)": 16,
     "LG(Duerr)": 8,
     "(Shavers)": 21,
@@ -124,7 +124,7 @@
     "APP(Peterson)": 3,
     "ELHS(Ortiz-Self)": 4,
     "CS(Goodman)": 1,
-    "(Volz)": 11,
+    "(Volz)": 12,
     "LAWS(Paul)": 1,
     "HCW(Parshley)": 4,
     "HCW(Ryu)": 1,
@@ -136,7 +136,7 @@
     "ELHS(Taylor)": 2,
     "TEDV(Leavitt)": 1,
     "CB(Tharinger)": 2,
-    "(Eslick)": 6,
+    "(Eslick)": 7,
     "CS(Ryu)": 1,
     "APP(Thai)": 3,
     "CPB(Mena)": 1,
@@ -151,7 +151,7 @@
     "(McEntire)": 5,
     "APP(Ortiz-Self)": 1,
     "(Klicker)": 7,
-    "(Fitzgibbon)": 24,
+    "(Fitzgibbon)": 25,
     "HCW(Low)": 1,
     "CS(Doglio)": 1,
     "(Pollet)": 21,
@@ -181,7 +181,7 @@
     "(Donaghy)": 14,
     "ENVI(Cortes)": 1,
     "LG(Donaghy)": 1,
-    "(Reed)": 19,
+    "(Reed)": 20,
     "(Valdez)": 27,
     "LAWS(Reed)": 1,
     "APP(McEntire)": 1,
@@ -196,7 +196,7 @@
     "(Hunt)": 10,
     "(Lekanoff)": 17,
     "LAWS(Obras)": 2,
-    "(Richards)": 23,
+    "(Richards)": 24,
     "PEW(Pollet)": 4,
     "APP(Berg)": 2,
     "APP(Gregerson)": 7,
@@ -240,7 +240,7 @@
     "CB(Duerr)": 1,
     "APP(Griffey)": 1,
     "(Cortes)": 26,
-    "(Ramel)": 8,
+    "(Ramel)": 9,
     "TEDV(Gregerson)": 2,
     "(Salahuddin)": 19,
     "PEW(Salahuddin)": 1,
@@ -291,7 +291,7 @@
     "CRJ(Taylor)": 3,
     "CRJ(Macri)": 1,
     "APP(Parshley)": 1,
-    "(Springer)": 10,
+    "(Springer)": 11,
     "TEDV(Stuebe)": 1,
     "ED(Thai)": 1,
     "(Zahn)": 21,
@@ -449,7 +449,7 @@
     "(Torres)": 30,
     "EDU(Torres)": 1,
     "HS(Salda\u00f1a)": 2,
-    "(Pedersen)": 7,
+    "(Pedersen)": 8,
     "(Braun)": 37,
     "EDU(Braun)": 1,
     "SGTE(Boehnke)": 1,
@@ -461,7 +461,7 @@
     "LC(Salda\u00f1a)": 12,
     "(Warnick)": 15,
     "EDU(Lovick)": 1,
-    "(King)": 26,
+    "(King)": 27,
     "HEWD(Torres)": 1,
     "HS(Wilson, C.)": 15,
     "EDU(Wilson, C.)": 3,
@@ -487,7 +487,7 @@
     "HLTC(Liias)": 2,
     "LAW(Hansen)": 3,
     "LAW(Lovick)": 4,
-    "(Salda\u00f1a)": 21,
+    "(Salda\u00f1a)": 22,
     "LAW(Braun)": 2,
     "ANR(Boehnke)": 2,
     "HLTC(Muzzall)": 3,
@@ -503,7 +503,7 @@
     "LC(Hasegawa)": 1,
     "LAW(Orwall)": 8,
     "SGTE(Trudeau)": 1,
-    "(Kauffman)": 12,
+    "(Kauffman)": 13,
     "HLTC(Bateman)": 3,
     "(Christian)": 23,
     "HLTC(Valdez)": 1,
@@ -517,7 +517,7 @@
     "(McCune)": 15,
     "LAW(Hasegawa)": 1,
     "SGTE(Gildon)": 2,
-    "(Gildon)": 30,
+    "(Gildon)": 31,
     "LAW(Torres)": 2,
     "WM(Bateman)": 1,
     "HS(Cortes)": 2,
@@ -547,7 +547,7 @@
     "EDU(Cortes)": 8,
     "WM(Trudeau)": 3,
     "HLTC(Wagoner)": 1,
-    "(Salomon)": 16,
+    "(Salomon)": 17,
     "LAW(Salomon)": 4,
     "TRAN(Salomon)": 1,
     "(MacEwen)": 15,
@@ -717,27 +717,27 @@
     "()": 321
   },
   "byType": {
-    "HB": 1720,
-    "SB": 1346,
+    "HB": 1728,
+    "SB": 1351,
     "6-": 2,
     "JM": 33,
-    "JR": 24,
+    "JR": 25,
     "CR": 17,
     "HR": 75,
     "SR": 72,
     "GA": 321
   },
   "byAgency": {
-    "House": 1757,
-    "Senate": 1383,
+    "House": 1765,
+    "Senate": 1389,
     "SI IL26-": 2,
     "HR": 74,
     "EHR": 1,
     "SR": 72,
     "SGA": 321
   },
-  "recentlyUpdated": 3610,
-  "updatedToday": 3610,
+  "recentlyUpdated": 3624,
+  "updatedToday": 3624,
   "topSponsors": [
     [
       "()",
@@ -784,6 +784,10 @@
       31
     ],
     [
+      "(Gildon)",
+      31
+    ],
+    [
       "(Parshley)",
       30
     ],
@@ -797,10 +801,6 @@
     ],
     [
       "(Lovick)",
-      30
-    ],
-    [
-      "(Gildon)",
       30
     ],
     [
