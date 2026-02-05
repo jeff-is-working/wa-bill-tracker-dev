@@ -1,27 +1,27 @@
 {
-  "generated": "2026-02-05T04:47:01.678550",
-  "totalBills": 3624,
+  "generated": "2026-02-05T15:13:17.187768",
+  "totalBills": 3627,
   "byStatus": {
-    "prefiled": 1889,
+    "prefiled": 1882,
     "floor": 191,
     "enacted": 285,
-    "committee": 1214,
+    "committee": 1224,
     "passed_origin": 39,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3624
+    "Unassigned": 3627
   },
   "byPriority": {
-    "medium": 3460,
+    "medium": 3463,
     "high": 124,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2165,
+    "General Government": 2167,
     "Public Safety": 129,
     "Housing": 111,
-    "Tax & Revenue": 276,
+    "Tax & Revenue": 277,
     "Transportation": 122,
     "Healthcare": 190,
     "Education": 255,
@@ -68,7 +68,7 @@
     "(Fosse)": 9,
     "LAWS(Davis)": 1,
     "ENVI(Fey)": 2,
-    "(Walen)": 19,
+    "(Walen)": 20,
     "HCW(Walen)": 1,
     "CPB(Walen)": 3,
     "ED(Ortiz-Self)": 3,
@@ -189,7 +189,7 @@
     "LAWS(Scott)": 3,
     "(Callan)": 11,
     "APP(Hackney)": 1,
-    "(Street)": 13,
+    "(Street)": 14,
     "SGOV(Mena)": 4,
     "AGNR(Goodman)": 1,
     "(Schmick)": 7,
@@ -202,7 +202,7 @@
     "APP(Gregerson)": 7,
     "(Manjarrez)": 8,
     "ELHS(Barnard)": 1,
-    "(Griffey)": 11,
+    "(Griffey)": 12,
     "ELHS(Bernbaum)": 3,
     "(Bernbaum)": 15,
     "LG(Ramel)": 1,
@@ -734,7 +734,7 @@
     "()": 321
   },
   "byType": {
-    "HB": 1728,
+    "HB": 1731,
     "SB": 1351,
     "6-": 2,
     "JM": 33,
@@ -745,7 +745,7 @@
     "GA": 321
   },
   "byAgency": {
-    "House": 1765,
+    "House": 1768,
     "Senate": 1389,
     "SI IL26-": 2,
     "HR": 74,
@@ -753,8 +753,8 @@
     "SR": 72,
     "SGA": 321
   },
-  "recentlyUpdated": 3624,
-  "updatedToday": 3624,
+  "recentlyUpdated": 3627,
+  "updatedToday": 3627,
   "topSponsors": [
     [
       "()",
