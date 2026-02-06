@@ -1,30 +1,30 @@
 {
-  "generated": "2026-02-06T04:38:29.037064",
-  "totalBills": 3629,
+  "generated": "2026-02-06T15:01:49.563005",
+  "totalBills": 3632,
   "byStatus": {
     "prefiled": 1907,
     "floor": 177,
     "enacted": 285,
-    "committee": 1205,
-    "passed_origin": 49,
+    "committee": 1221,
+    "passed_origin": 36,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3629
+    "Unassigned": 3632
   },
   "byPriority": {
-    "medium": 3465,
+    "medium": 3468,
     "high": 124,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2169,
+    "General Government": 2171,
     "Public Safety": 129,
     "Housing": 111,
     "Tax & Revenue": 277,
     "Transportation": 122,
     "Healthcare": 190,
-    "Education": 255,
+    "Education": 256,
     "Social Services": 104,
     "Environment": 92,
     "Business": 96,
@@ -189,7 +189,7 @@
     "LAWS(Scott)": 3,
     "(Callan)": 11,
     "APP(Hackney)": 1,
-    "(Street)": 14,
+    "(Street)": 15,
     "SGOV(Mena)": 4,
     "AGNR(Goodman)": 1,
     "(Schmick)": 7,
@@ -242,7 +242,7 @@
     "(Cortes)": 26,
     "(Ramel)": 9,
     "TEDV(Gregerson)": 2,
-    "(Salahuddin)": 18,
+    "(Salahuddin)": 19,
     "PEW(Salahuddin)": 1,
     "FIN(Berg)": 3,
     "ELHS(Obras)": 1,
@@ -320,7 +320,7 @@
     "AGNR(Parshley)": 2,
     "CS(Lekanoff)": 3,
     "ENVI(Dye)": 1,
-    "(Chase)": 13,
+    "(Chase)": 14,
     "(Keaton)": 9,
     "HOUS(Lekanoff)": 1,
     "LAWS(Cortes)": 3,
@@ -739,7 +739,7 @@
     "()": 321
   },
   "byType": {
-    "HB": 1731,
+    "HB": 1734,
     "SB": 1351,
     "6-": 2,
     "JM": 33,
@@ -750,7 +750,7 @@
     "GA": 321
   },
   "byAgency": {
-    "House": 1768,
+    "House": 1771,
     "Senate": 1389,
     "SI IL26-": 2,
     "HR": 75,
@@ -758,8 +758,8 @@
     "SR": 73,
     "SGA": 321
   },
-  "recentlyUpdated": 3629,
-  "updatedToday": 3629,
+  "recentlyUpdated": 3632,
+  "updatedToday": 3632,
   "topSponsors": [
     [
       "()",
