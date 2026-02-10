@@ -1,12 +1,12 @@
 {
-  "generated": "2026-02-10T04:56:28.840203",
+  "generated": "2026-02-10T15:21:00.639682",
   "totalBills": 3647,
   "byStatus": {
-    "prefiled": 1938,
-    "floor": 270,
+    "prefiled": 1883,
+    "floor": 323,
     "enacted": 285,
-    "committee": 1133,
-    "passed_origin": 15,
+    "committee": 1134,
+    "passed_origin": 16,
     "introduced": 6
   },
   "byCommittee": {
