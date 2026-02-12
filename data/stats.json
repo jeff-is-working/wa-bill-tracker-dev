@@ -1,24 +1,24 @@
 {
-  "generated": "2026-02-11T15:22:38.644172",
-  "totalBills": 3649,
+  "generated": "2026-02-12T04:50:44.596490",
+  "totalBills": 3651,
   "byStatus": {
-    "prefiled": 1893,
-    "passed_origin": 56,
+    "prefiled": 1910,
+    "passed_origin": 97,
     "enacted": 285,
-    "committee": 1112,
-    "floor": 297,
-    "introduced": 6
+    "committee": 1056,
+    "floor": 296,
+    "introduced": 7
   },
   "byCommittee": {
-    "Unassigned": 3649
+    "Unassigned": 3651
   },
   "byPriority": {
-    "medium": 3485,
+    "medium": 3487,
     "high": 124,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2187,
+    "General Government": 2189,
     "Public Safety": 129,
     "Housing": 111,
     "Tax & Revenue": 277,
@@ -564,7 +564,7 @@
     "HSG(Trudeau)": 2,
     "SGTE(MacEwen)": 1,
     "HLTC(Nobles)": 1,
-    "(Riccelli)": 34,
+    "(Riccelli)": 35,
     "LAW(Wagoner)": 3,
     "HS(Hansen)": 1,
     "ENET(Slatter)": 2,
@@ -733,7 +733,7 @@
     "(People of the State of Washington)": 2,
     "TR(Gregerson)": 1,
     "SGOV(Tharinger)": 1,
-    "(Jinkins)": 11,
+    "(Jinkins)": 12,
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
@@ -746,21 +746,21 @@
     "JM": 33,
     "JR": 25,
     "CR": 17,
-    "HR": 81,
-    "SR": 76,
+    "HR": 82,
+    "SR": 77,
     "GA": 329
   },
   "byAgency": {
     "House": 1771,
     "Senate": 1390,
     "SI IL26-": 2,
-    "HR": 80,
+    "HR": 81,
     "EHR": 1,
-    "SR": 76,
+    "SR": 77,
     "SGA": 329
   },
-  "recentlyUpdated": 3649,
-  "updatedToday": 3649,
+  "recentlyUpdated": 3651,
+  "updatedToday": 3651,
   "topSponsors": [
     [
       "()",
@@ -787,11 +787,11 @@
       36
     ],
     [
-      "(Rule)",
-      34
+      "(Riccelli)",
+      35
     ],
     [
-      "(Riccelli)",
+      "(Rule)",
       34
     ],
     [
