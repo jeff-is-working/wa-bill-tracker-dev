@@ -1,24 +1,24 @@
 {
-  "generated": "2026-02-13T04:47:20.380948",
-  "totalBills": 3655,
+  "generated": "2026-02-13T15:04:27.159645",
+  "totalBills": 3656,
   "byStatus": {
-    "prefiled": 1926,
-    "committee": 1102,
+    "prefiled": 1927,
+    "committee": 1081,
     "enacted": 285,
-    "floor": 251,
-    "passed_origin": 84,
+    "floor": 284,
+    "passed_origin": 72,
     "introduced": 7
   },
   "byCommittee": {
-    "Unassigned": 3655
+    "Unassigned": 3656
   },
   "byPriority": {
-    "medium": 3490,
+    "medium": 3491,
     "high": 125,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2193,
+    "General Government": 2194,
     "Public Safety": 129,
     "Housing": 111,
     "Tax & Revenue": 277,
@@ -203,7 +203,7 @@
     "ELHS(Barnard)": 1,
     "(Griffey)": 12,
     "ELHS(Bernbaum)": 3,
-    "(Bernbaum)": 14,
+    "(Bernbaum)": 15,
     "LG(Ramel)": 1,
     "FIN(Bergquist)": 2,
     "APP(Stonier)": 3,
@@ -740,7 +740,7 @@
     "()": 329
   },
   "byType": {
-    "HB": 1736,
+    "HB": 1737,
     "SB": 1352,
     "6-": 2,
     "JM": 33,
@@ -751,7 +751,7 @@
     "GA": 329
   },
   "byAgency": {
-    "House": 1773,
+    "House": 1774,
     "Senate": 1391,
     "SI IL26-": 2,
     "HR": 81,
@@ -759,8 +759,8 @@
     "SR": 78,
     "SGA": 329
   },
-  "recentlyUpdated": 3655,
-  "updatedToday": 3655,
+  "recentlyUpdated": 3656,
+  "updatedToday": 3656,
   "topSponsors": [
     [
       "()",
