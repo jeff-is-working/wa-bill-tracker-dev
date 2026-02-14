@@ -1,13 +1,13 @@
 {
-  "generated": "2026-02-13T15:04:27.159645",
+  "generated": "2026-02-14T04:37:44.973278",
   "totalBills": 3656,
   "byStatus": {
-    "prefiled": 1927,
-    "committee": 1081,
+    "prefiled": 1949,
+    "committee": 1070,
     "enacted": 285,
-    "floor": 284,
-    "passed_origin": 72,
-    "introduced": 7
+    "floor": 250,
+    "passed_origin": 96,
+    "introduced": 6
   },
   "byCommittee": {
     "Unassigned": 3656
@@ -496,7 +496,7 @@
     "ANR(Boehnke)": 2,
     "HLTC(Muzzall)": 3,
     "ANR(Muzzall)": 2,
-    "(Muzzall)": 17,
+    "(Muzzall)": 18,
     "WM(Robinson)": 11,
     "(Robinson)": 18,
     "LAW(Dhingra)": 5,
@@ -568,7 +568,7 @@
     "LAW(Wagoner)": 3,
     "HS(Hansen)": 1,
     "ENET(Slatter)": 2,
-    "LAW(Muzzall)": 2,
+    "LAW(Muzzall)": 1,
     "HLTC(Slatter)": 6,
     "ENET(Liias)": 5,
     "(Orwall)": 13,
