@@ -1,24 +1,24 @@
 {
-  "generated": "2026-02-14T04:37:44.973278",
-  "totalBills": 3656,
+  "generated": "2026-02-14T15:01:33.649889",
+  "totalBills": 3657,
   "byStatus": {
-    "prefiled": 1949,
-    "committee": 1070,
+    "prefiled": 1954,
+    "committee": 1096,
     "enacted": 285,
-    "floor": 250,
-    "passed_origin": 96,
+    "floor": 242,
+    "passed_origin": 74,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3656
+    "Unassigned": 3657
   },
   "byPriority": {
-    "medium": 3491,
+    "medium": 3492,
     "high": 125,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2194,
+    "General Government": 2195,
     "Public Safety": 129,
     "Housing": 111,
     "Tax & Revenue": 277,
@@ -82,7 +82,7 @@
     "APP(Shavers)": 1,
     "CPB(Waters)": 1,
     "APP(Fosse)": 3,
-    "(Barnard)": 17,
+    "(Barnard)": 18,
     "(Mena)": 11,
     "APP(Klicker)": 3,
     "CS(Ortiz-Self)": 1,
@@ -743,7 +743,7 @@
     "HB": 1737,
     "SB": 1352,
     "6-": 2,
-    "JM": 33,
+    "JM": 34,
     "JR": 26,
     "CR": 17,
     "HR": 82,
@@ -751,7 +751,7 @@
     "GA": 329
   },
   "byAgency": {
-    "House": 1774,
+    "House": 1775,
     "Senate": 1391,
     "SI IL26-": 2,
     "HR": 81,
@@ -759,8 +759,8 @@
     "SR": 78,
     "SGA": 329
   },
-  "recentlyUpdated": 3656,
-  "updatedToday": 3656,
+  "recentlyUpdated": 3657,
+  "updatedToday": 3657,
   "topSponsors": [
     [
       "()",
