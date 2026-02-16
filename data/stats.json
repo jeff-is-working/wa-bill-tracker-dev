@@ -1,19 +1,19 @@
 {
-  "generated": "2026-02-16T04:52:05.588872",
-  "totalBills": 3657,
+  "generated": "2026-02-16T15:06:34.950920",
+  "totalBills": 3658,
   "byStatus": {
     "prefiled": 1957,
-    "committee": 1087,
+    "committee": 1113,
     "enacted": 285,
     "floor": 246,
-    "passed_origin": 76,
+    "passed_origin": 51,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3657
+    "Unassigned": 3658
   },
   "byPriority": {
-    "medium": 3492,
+    "medium": 3493,
     "high": 125,
     "low": 40
   },
@@ -22,7 +22,7 @@
     "Public Safety": 129,
     "Housing": 111,
     "Tax & Revenue": 277,
-    "Transportation": 122,
+    "Transportation": 123,
     "Healthcare": 189,
     "Education": 257,
     "Social Services": 105,
@@ -484,7 +484,7 @@
     "HS(Salomon)": 1,
     "LGV(Warnick)": 2,
     "LC(Warnick)": 1,
-    "(Liias)": 32,
+    "(Liias)": 33,
     "WM(Holy)": 2,
     "TRAN(Conway)": 1,
     "(Stanford)": 14,
@@ -741,7 +741,7 @@
   },
   "byType": {
     "HB": 1737,
-    "SB": 1352,
+    "SB": 1353,
     "6-": 2,
     "JM": 34,
     "JR": 26,
@@ -752,15 +752,15 @@
   },
   "byAgency": {
     "House": 1775,
-    "Senate": 1391,
+    "Senate": 1392,
     "SI IL26-": 2,
     "HR": 81,
     "EHR": 1,
     "SR": 78,
     "SGA": 329
   },
-  "recentlyUpdated": 3657,
-  "updatedToday": 3657,
+  "recentlyUpdated": 3658,
+  "updatedToday": 3658,
   "topSponsors": [
     [
       "()",
@@ -796,7 +796,7 @@
     ],
     [
       "(Liias)",
-      32
+      33
     ],
     [
       "(Wellman)",
