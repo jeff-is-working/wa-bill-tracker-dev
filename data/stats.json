@@ -1,24 +1,24 @@
 {
-  "generated": "2026-02-16T15:06:34.950920",
-  "totalBills": 3658,
+  "generated": "2026-02-17T04:52:54.244598",
+  "totalBills": 3660,
   "byStatus": {
-    "prefiled": 1957,
-    "committee": 1113,
+    "prefiled": 1972,
+    "committee": 1114,
     "enacted": 285,
-    "floor": 246,
-    "passed_origin": 51,
+    "floor": 210,
+    "passed_origin": 73,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3658
+    "Unassigned": 3660
   },
   "byPriority": {
-    "medium": 3493,
+    "medium": 3495,
     "high": 125,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2195,
+    "General Government": 2197,
     "Public Safety": 129,
     "Housing": 111,
     "Tax & Revenue": 277,
@@ -511,7 +511,7 @@
     "HLTC(Bateman)": 2,
     "(Christian)": 23,
     "HLTC(Valdez)": 1,
-    "(Nobles)": 30,
+    "(Nobles)": 31,
     "HLTC(Frame)": 1,
     "(Trudeau)": 11,
     "EDU(Nobles)": 4,
@@ -733,7 +733,7 @@
     "(People of the State of Washington)": 2,
     "TR(Gregerson)": 1,
     "SGOV(Tharinger)": 1,
-    "(Jinkins)": 12,
+    "(Jinkins)": 13,
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
@@ -746,21 +746,21 @@
     "JM": 34,
     "JR": 26,
     "CR": 17,
-    "HR": 82,
-    "SR": 78,
+    "HR": 83,
+    "SR": 79,
     "GA": 329
   },
   "byAgency": {
     "House": 1775,
     "Senate": 1392,
     "SI IL26-": 2,
-    "HR": 81,
+    "HR": 82,
     "EHR": 1,
-    "SR": 78,
+    "SR": 79,
     "SGA": 329
   },
-  "recentlyUpdated": 3658,
-  "updatedToday": 3658,
+  "recentlyUpdated": 3660,
+  "updatedToday": 3660,
   "topSponsors": [
     [
       "()",
@@ -811,15 +811,15 @@
       31
     ],
     [
+      "(Nobles)",
+      31
+    ],
+    [
       "(Dufault)",
       30
     ],
     [
       "(Lovick)",
-      30
-    ],
-    [
-      "(Nobles)",
       30
     ],
     [
