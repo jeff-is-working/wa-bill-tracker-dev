@@ -1,19 +1,19 @@
 {
-  "generated": "2026-02-18T04:54:24.323825",
-  "totalBills": 3660,
+  "generated": "2026-02-18T15:15:00.154121",
+  "totalBills": 3661,
   "byStatus": {
     "prefiled": 2001,
-    "committee": 1147,
+    "committee": 1164,
     "enacted": 285,
     "floor": 176,
-    "passed_origin": 45,
+    "passed_origin": 29,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3660
+    "Unassigned": 3661
   },
   "byPriority": {
-    "medium": 3495,
+    "medium": 3496,
     "high": 125,
     "low": 40
   },
@@ -25,7 +25,7 @@
     "Transportation": 123,
     "Healthcare": 189,
     "Education": 257,
-    "Social Services": 105,
+    "Social Services": 106,
     "Environment": 92,
     "Business": 96,
     "Technology": 51,
@@ -498,7 +498,7 @@
     "ANR(Muzzall)": 2,
     "(Muzzall)": 18,
     "WM(Robinson)": 11,
-    "(Robinson)": 18,
+    "(Robinson)": 19,
     "LAW(Dhingra)": 5,
     "WM(Dhingra)": 5,
     "TRAN(Valdez)": 2,
@@ -741,7 +741,7 @@
   },
   "byType": {
     "HB": 1737,
-    "SB": 1353,
+    "SB": 1354,
     "6-": 2,
     "JM": 34,
     "JR": 26,
@@ -752,15 +752,15 @@
   },
   "byAgency": {
     "House": 1775,
-    "Senate": 1392,
+    "Senate": 1393,
     "SI IL26-": 2,
     "HR": 82,
     "EHR": 1,
     "SR": 79,
     "SGA": 329
   },
-  "recentlyUpdated": 3660,
-  "updatedToday": 3660,
+  "recentlyUpdated": 3661,
+  "updatedToday": 3661,
   "topSponsors": [
     [
       "()",
