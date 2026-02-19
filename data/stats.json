@@ -1,8 +1,8 @@
 {
-  "generated": "2026-02-18T15:15:00.154121",
-  "totalBills": 3661,
+  "generated": "2026-02-19T09:24:18.261041",
+  "totalBills": 3666,
   "byStatus": {
-    "prefiled": 2001,
+    "prefiled": 2006,
     "committee": 1164,
     "enacted": 285,
     "floor": 176,
@@ -10,31 +10,31 @@
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3661
+    "Unassigned": 3666
   },
   "byPriority": {
-    "medium": 3496,
+    "medium": 3501,
     "high": 125,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2197,
+    "General Government": 2200,
     "Public Safety": 129,
     "Housing": 111,
     "Tax & Revenue": 277,
     "Transportation": 123,
-    "Healthcare": 189,
+    "Healthcare": 190,
     "Education": 257,
     "Social Services": 106,
     "Environment": 92,
     "Business": 96,
     "Technology": 51,
-    "Agriculture": 33
+    "Agriculture": 34
   },
   "bySponsor": {
     "(Walsh)": 20,
     "(Abbarno)": 16,
-    "(Leavitt)": 21,
+    "(Leavitt)": 22,
     "(Ryu)": 12,
     "(Low)": 23,
     "(Jacobsen)": 9,
@@ -58,7 +58,7 @@
     "(Bronoske)": 13,
     "(Dent)": 22,
     "AGNR(Dent)": 2,
-    "(Farivar)": 19,
+    "(Farivar)": 20,
     "TEDV(Barnard)": 2,
     "(Barkis)": 16,
     "(Alvarado)": 15,
@@ -503,7 +503,7 @@
     "WM(Dhingra)": 5,
     "TRAN(Valdez)": 2,
     "LC(Valdez)": 2,
-    "(Hasegawa)": 28,
+    "(Hasegawa)": 29,
     "LC(Hasegawa)": 1,
     "LAW(Orwall)": 7,
     "SGTE(Trudeau)": 1,
@@ -535,7 +535,7 @@
     "HEWD(Nobles)": 4,
     "ANR(Short)": 3,
     "LAW(Nobles)": 1,
-    "(Short)": 14,
+    "(Short)": 15,
     "ENET(Shewmake)": 6,
     "WM(Shewmake)": 5,
     "SGTE(Valdez)": 3,
@@ -733,7 +733,7 @@
     "(People of the State of Washington)": 2,
     "TR(Gregerson)": 1,
     "SGOV(Tharinger)": 1,
-    "(Jinkins)": 13,
+    "(Jinkins)": 14,
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
@@ -746,21 +746,21 @@
     "JM": 34,
     "JR": 26,
     "CR": 17,
-    "HR": 83,
-    "SR": 79,
+    "HR": 86,
+    "SR": 81,
     "GA": 329
   },
   "byAgency": {
     "House": 1775,
     "Senate": 1393,
     "SI IL26-": 2,
-    "HR": 82,
+    "HR": 85,
     "EHR": 1,
-    "SR": 79,
+    "SR": 81,
     "SGA": 329
   },
-  "recentlyUpdated": 3661,
-  "updatedToday": 3661,
+  "recentlyUpdated": 3666,
+  "updatedToday": 3666,
   "topSponsors": [
     [
       "()",
@@ -832,7 +832,7 @@
     ],
     [
       "(Hasegawa)",
-      28
+      29
     ],
     [
       "(Cortes)",
