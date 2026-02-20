@@ -1,25 +1,25 @@
 {
-  "generated": "2026-02-19T15:09:56.887993",
-  "totalBills": 3669,
+  "generated": "2026-02-20T04:42:53.282478",
+  "totalBills": 3672,
   "byStatus": {
-    "prefiled": 2006,
-    "committee": 1186,
+    "prefiled": 2071,
+    "committee": 1182,
     "enacted": 285,
-    "floor": 176,
+    "floor": 118,
     "passed_origin": 10,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3669
+    "Unassigned": 3672
   },
   "byPriority": {
-    "medium": 3504,
-    "high": 125,
+    "medium": 3506,
+    "high": 126,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2200,
-    "Public Safety": 129,
+    "General Government": 2202,
+    "Public Safety": 130,
     "Housing": 111,
     "Tax & Revenue": 279,
     "Transportation": 124,
@@ -551,10 +551,10 @@
     "EDU(Cortes)": 7,
     "WM(Trudeau)": 4,
     "HLTC(Wagoner)": 1,
-    "(Salomon)": 17,
+    "(Salomon)": 18,
     "LAW(Salomon)": 4,
     "TRAN(Salomon)": 1,
-    "(MacEwen)": 15,
+    "(MacEwen)": 16,
     "BTE(MacEwen)": 1,
     "(Frame)": 17,
     "ANR(Shewmake)": 1,
@@ -733,7 +733,7 @@
     "(People of the State of Washington)": 2,
     "TR(Gregerson)": 1,
     "SGOV(Tharinger)": 1,
-    "(Jinkins)": 14,
+    "(Jinkins)": 15,
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
@@ -746,21 +746,21 @@
     "JM": 34,
     "JR": 27,
     "CR": 17,
-    "HR": 86,
-    "SR": 81,
+    "HR": 87,
+    "SR": 83,
     "GA": 329
   },
   "byAgency": {
     "House": 1777,
     "Senate": 1394,
     "SI IL26-": 2,
-    "HR": 85,
+    "HR": 86,
     "EHR": 1,
-    "SR": 81,
+    "SR": 83,
     "SGA": 329
   },
-  "recentlyUpdated": 3669,
-  "updatedToday": 3669,
+  "recentlyUpdated": 3672,
+  "updatedToday": 3672,
   "topSponsors": [
     [
       "()",
