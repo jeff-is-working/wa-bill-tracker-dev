@@ -1,25 +1,25 @@
 {
-  "generated": "2026-02-20T04:42:53.282478",
-  "totalBills": 3672,
+  "generated": "2026-02-20T15:10:00.887247",
+  "totalBills": 3677,
   "byStatus": {
     "prefiled": 2071,
-    "committee": 1182,
+    "committee": 1187,
     "enacted": 285,
     "floor": 118,
     "passed_origin": 10,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3672
+    "Unassigned": 3677
   },
   "byPriority": {
-    "medium": 3506,
+    "medium": 3511,
     "high": 126,
     "low": 40
   },
   "byTopic": {
-    "General Government": 2202,
-    "Public Safety": 130,
+    "General Government": 2206,
+    "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 279,
     "Transportation": 124,
@@ -47,7 +47,7 @@
     "CB(Kloba)": 1,
     "(Goodman)": 6,
     "(Reeves)": 36,
-    "(Stonier)": 19,
+    "(Stonier)": 20,
     "(Couture)": 36,
     "(Ortiz-Self)": 5,
     "PEW(Ortiz-Self)": 1,
@@ -737,10 +737,10 @@
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
-    "()": 329
+    "()": 333
   },
   "byType": {
-    "HB": 1738,
+    "HB": 1739,
     "SB": 1355,
     "6-": 2,
     "JM": 34,
@@ -748,23 +748,23 @@
     "CR": 17,
     "HR": 87,
     "SR": 83,
-    "GA": 329
+    "GA": 333
   },
   "byAgency": {
-    "House": 1777,
+    "House": 1778,
     "Senate": 1394,
     "SI IL26-": 2,
     "HR": 86,
     "EHR": 1,
     "SR": 83,
-    "SGA": 329
+    "SGA": 333
   },
-  "recentlyUpdated": 3672,
-  "updatedToday": 3672,
+  "recentlyUpdated": 3677,
+  "updatedToday": 3677,
   "topSponsors": [
     [
       "()",
-      329
+      333
     ],
     [
       "(Fortunato)",
